@@ -1,0 +1,499 @@
+/*****************
+GENERAL
+*****************/
+
+body {
+	height: 1080px; /* old value: 100% */
+	width: 1000px;
+	max-height: 1720px;
+	margin: 0 auto;
+	background-color: #fff;
+	position: relative;
+	text-align: center;
+}
+
+
+.container {
+	min-height: 100%;
+	height: 100%;
+}
+
+
+/* logo 
+.container.row.logo, .container .row .logo {
+	float: right;
+  margin-top: 15px;
+	}
+
+
+.container.row.heading, .container .row .heading {
+	float: left;
+	margin-top: 30px;
+} */
+
+
+/*****************
+BUTTONS
+*****************/
+
+
+/*****************
+COLORS & FONTS
+*****************/
+
+
+/* heading text */
+h1, h2 {
+  color: #424242; 
+	font-family: 'Oxygen', sans-serif;
+  font-weight: 400;
+  font-size: 1.5em;
+}
+
+h1 a {
+	font-size: 2.25em;
+	font-weight: 300;
+}
+
+/* annotation @ enrollment */
+h6 {
+	color: #424242; 
+	font-family: 'Oxygen', sans-serif;
+  font-weight: 400;
+  font-size: 0.75em;
+}
+
+/* paragraphs */
+p {
+	color: #424242;
+  font-family: 'Oxygen', sans-serif;
+  font-weight: 400;
+  font-size: 1.15em;
+}
+
+/* links */
+a {
+  color: #424242;
+  font-family: 'Oxygen', sans-serif;
+  font-weight: 400;
+  font-size: 1.15em;
+  text-decoration: none;
+}
+
+a:hover {
+	color: #6eb80f;
+	text-decoration: none;
+}
+
+small {
+	float: left;
+	margin-left: 15px;
+	margin-top: 5px; 
+}
+
+
+/*****************
+NAV-PILLS (Course list)
+*****************/
+
+
+.nav > li > a:hover,
+.nav > li > a:focus {
+  text-decoration: none;
+  background-color: #fff;
+}
+
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
+.nav-pills > li.active > a:focus {
+	color: #6eb80f;
+  background-color: #fff;
+}
+
+
+/*****************
+ROWS
+*****************/
+
+
+#login {
+	font-size: 8px;
+	margin-left: 40 px;
+	height: 100px;
+	padding-left: 20px;
+	padding-top: 50 px;
+}
+
+
+.small-head {
+	margin-top: 10px;
+	float: left;
+	min-height: 40px; 
+	min-width: 180px;
+	background-image: -moz-linear-gradient(270deg, rgb(121, 190, 14), rgb(177, 225, 28));
+	background: -webkit-linear-gradient(270deg, rgb(121, 190, 14), rgb(177, 225, 28));
+	background: -o-linear-gradient(270deg, rgb(121, 190, 14), rgb(177, 225, 28));
+	font-size: 25px;
+	text-align: center;
+}
+
+
+#content-head {
+	margin-top: 10px;
+	max-width: 770px;
+	min-height: 40px;
+	background: -moz-linear-gradient(270deg, rgb(121, 190, 14), rgb(177, 225, 28));
+	background: -webkit-linear-gradient(270deg, rgb(121, 190, 14), rgb(177, 225, 28));
+	background: -o-linear-gradient(270deg, rgb(121, 190, 14), rgb(177, 225, 28));
+}
+
+
+.small-content {
+	float: left;
+	text-align: left;
+	max-height: 400px;
+	/*min-height: 250px;*/
+	min-width: 180px;
+	box-shadow: 1px 2px 4px rgba(0,0,0, .2);
+}
+
+
+#content {
+	position: absolute;
+	min-width: 770px;
+	/*min-height: 250px;*/
+	max-height: 600px;
+	text-align: center;
+	box-shadow: 1px 2px 4px rgba(0,0,0, .2);
+	max-width: 770px;
+}
+
+
+.edit {
+	white-space: nowrap;
+	margin-top: 47px;
+	font-weight: 300;
+  font-size: 1.0em;
+}
+
+#logincontent-head {
+	margin-top: 10px;
+	width: 950px;
+	min-height: 40px;
+	background: -moz-linear-gradient(270deg, rgb(121, 190, 14), rgb(177, 225, 28));
+	background: -webkit-linear-gradient(270deg, rgb(121, 190, 14), rgb(177, 225, 28));
+	background: -o-linear-gradient(270deg, rgb(121, 190, 14), rgb(177, 225, 28));
+}
+
+#logincontent {
+	width: 950px;
+	/*min-height: 250px;*/
+	max-height: 600px;
+	text-align: center;
+	box-shadow: 1px 2px 4px rgba(0,0,0, .2);
+}
+
+
+/*
+.tbTutor {
+	margin-top: 10px;
+	margin-left: 15px;
+	margin-right: 2px;
+	max-width: 160px;
+	color: #424242;
+  font-family: 'Oxygen', sans-serif;
+  font-weight: 400;
+  font-size: 1.15em;
+  text-decoration: none;
+}
+*/
+
+
+#message_tutors a {
+	color: blue;
+}
+
+
+ul {
+	list-style-type: none;
+	line-height: 2;
+}
+
+
+#content td {
+	padding-top: 7px;
+	width: 125px;
+	color: #424242;
+  font-family: 'Oxygen', sans-serif;
+  font-weight: 400;
+  font-size: 1.1em;
+}
+
+#content th {
+    padding-top: 7px;
+    width: 125px;
+    color: #424242;
+    font-family: 'Oxygen', sans-serif;
+    padding-left: 30px;
+    font-size: 1.1em;
+}
+
+
+.form-horizontal {
+	max-width: 450px;
+	margin-left: 150px;
+}
+
+
+.form-signin {
+	max-width: 450px;
+	margin-left: 150px;
+}
+
+
+.form-control {
+	margin-top: 15px;
+}
+
+
+.btn-default {
+	margin-top:10px;
+	width: 150px;
+	background-color: #dfdede;
+}
+
+.btn:hover,
+.btn:focus,
+.btn.focus {
+  color: #fff;
+  background-color: #a2a0a0;
+  text-decoration: none;
+}
+
+
+.btn-primary {
+	margin-top: 15px;
+	width: 150px;
+	margin-left: 150px;
+}
+
+
+.control-label {
+	margin-top: 13px;
+}
+
+
+.send {
+	margin-left: 310px;
+	margin-bottom: 25px;
+}
+
+
+#InputMessage { 
+	margin-left: 200px;
+	width: 400px;
+}
+
+.form-control:focus {
+  border-color: #6eb80f;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(110, 184, 15, .4);
+          box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(110, 184, 15, .4);
+/*  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+          box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6); */
+}
+	
+/*****************
+FOOTER
+*****************/
+
+.navbar {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.logoutButton {
+	float: right;
+	margin-right: 15px;
+	margin-top: 8px;
+	z-index: 1;
+	text-decoration: underline;
+}
+
+.logoutButton a:hover {
+	color: #fff;
+}
+
+.editCourse {
+	position: absolute;
+	margin-left: 135px;
+	margin-top: 9px;
+	color: #424242;
+  font-family: 'Oxygen', sans-serif;
+  font-weight: 300;
+  font-size: 0.60em;
+	z-index: 0;
+	position: absolute;
+	text-decoration: underline;
+}
+
+.editCourse a:hover {
+	color: #fff;
+}
+
+.editTutor {
+	position: absolute;
+	margin-left: 135px;
+	margin-top: 9px;
+	color: #424242;
+  font-family: 'Oxygen', sans-serif;
+  font-weight: 300;
+  font-size: 0.60em;
+	z-index: 0;
+	position: absolute;
+	text-decoration: underline;
+}
+
+.editTutor a:hover {
+	color: #fff;
+}
+
+.checkbox {
+	margin-top: 15px;
+	margin-left: -3px;
+	color: #424242;
+  font-family: 'Oxygen', sans-serif;
+  font-weight: 400;
+  font-size: 1.00em;
+}
+
+label {
+	color: #424242;
+  font-family: 'Oxygen', sans-serif;
+  font-weight: 400;
+  font-size: 1.00em;
+}
+
+input[type="checkbox"]:checked {
+	box-shadow: inset 0 1px 3px rgba(0,0,0,.3);
+}
+
+input[type="checkbox"]:not(:checked),
+input[type="checkbox"]:checked 
+
+
+#edited.nav li a, #edited .nav li a {
+	color: green!important;
+  font-family: 'Oxygen', sans-serif;
+  font-weight: 400;
+  font-size: 1.15em;
+  text-decoration: none;
+}
+
+#editMode {
+	color: red;
+}
+
+
+/* marked rows of participant lists */
+.container.row.col-sm-10.table.cat, .container .row .col-sm-10 .table .cat {
+	background-color: #ebeaea;
+}
+
+
+/* Back-button in content header */
+.backButton {
+	float: left;
+	margin-left: 15px;
+	margin-top: 7px;
+	font-size: 17px;
+}
+.backButton a:hover {
+	color: #fff;
+}
+
+/*Login box on login site */
+.container.row.col-sm-2.small-content.nav p, .container .row .col-sm-2 .small-content .nav p {
+	margin-left: 15px;
+	margin-right: 15px;
+	margin-top: 15px;
+	margin-bottom: 22px;
+}
+
+/* font-size for table/list of all tutors (to save some space) */
+.container.row.col-sm-10.table a, .container .row .col-sm-10 .table a {
+	font-size: 1.0em;
+}
+
+.checkAppointement {
+	float: left;
+	margin-top: 23px;
+	margin-left: 15px;
+}
+
+.deleteLabel {
+	position: absolute;
+	margin-top: 303px;
+	margin-left: 585px;
+}
+
+.deleteIcon {
+	position: absolute;
+	float: right;
+	margin-top: 316px;
+	margin-left: 730px;
+}
+
+.buttonsApp {
+	margin-top: 370px;
+	margin-bottom: 20px;
+}
+
+.approvalLabel {
+	position: absolute;
+	margin-top: 305px;
+	margin-left: 35px;
+}
+
+.column-one {
+	width: 30%;
+}
+
+.column-two {
+ width: 20%;
+ margin-top: 10px;
+}
+.column-three {
+	width: 30%;
+}
+.column-four {
+	width: 10%;
+}
+
+.column-five {
+ width: 10%;
+}
+
+.row.col-sm-10.tutorTable tr, .row .col-sm-10 .tutorTable tr {
+	border-collapse: collapse;
+	padding: 5px;
+	height: 10px;
+}
+
+.course-column-one {
+	width: 50%;
+}
+.course-column-two {
+	width: 30%;
+}
+.course-column-three {
+	width: 10%;
+}
+.course-column-four {
+	width: 10%;
+}
+
+
+
+
+

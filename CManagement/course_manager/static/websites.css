@@ -1,0 +1,33 @@
+.SiteHeader
+{
+    background-color:#00BFFF;
+    height:100px;
+}
+.CourseList
+{
+    background-color:#f7fbfc;
+}
+.Debug
+{
+    background-color:#e7ebec;
+    float: left;
+    top: 0px;
+    left: 0px;
+    height: 150px;
+    width: 350px;
+    padding: 10px;
+    position: absolute;
+    text-align: left;
+    line-height: 70%;
+}
+
+table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+}
+th {
+    text-align: left;
+}
