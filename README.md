@@ -10,3 +10,4 @@ This project was developed by a group of students of *TUD/Inf*.
 Initially started as a practical assignment for the software development lecture, it is now developed further for everyone to enjoy.
 
 ## Further reading
+Please have a look at the projects wiki for detailed information. (e.g. [Getting started](https://github.com/ChickenDietInc/ifsr_course_enrollment/wiki/Getting-started))
