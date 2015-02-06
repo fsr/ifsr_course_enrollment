@@ -61,12 +61,13 @@ def index_show_appointments(request, course_id):
     if not selected_course:
         return HttpResponseRedirect(reverse('cmanagement:index'))
 
-    course_apps = []
+
     appointment_list = Appointment.objects.order_by('-current_count_of_participants')
-    for appl in appointment_list:
-        if appl.my_course.id == selected_course.id and appl.is_visible \
-           and appl.my_tutors.all().count() > 0:
-                course_apps.append(appl)
+    course_apps = [
+        appl for appl in appointment_list
+        if (appl.my_course.id == selected_course.id and appl.is_visible
+           and appl.my_tutors.all().count() > 0)
+    ]
 
     latest_courses_list = get_latest_courses_list()
 
@@ -161,12 +162,12 @@ def process_enrollment(request, appointment_id):
     faculty = request.POST.get('faculty_dropdown', 'f0')
 
     # get the chosen kind of credit
-    if credit == 'c1':
-        credit = 'AQUA'
-    elif credit == 'c3':
-        credit = 'extracurricular studies (studium generale)'
-    else:
-        credit = 'none'
+    avail_credits = {
+        'c1': 'AQUA',
+        'c3': 'extracurricular studies (studium generale)'
+    }
+
+    credit = avail_credits.get(credit, 'none')
 
     print(credit)
 
@@ -259,9 +260,11 @@ def process_enrollment(request, appointment_id):
     new_account.save()
     # TODO: replace hardcoded confirmation link below
     confirmation_link = "https://www.ifsr.de/kurse/kurse/confirm/" \
-                        + str(pseudo_password) \
-                        + "/" + new_account.username \
-                        + "/" + appointment_id
+                        "{passwd}/{username}/{app_id}".format(
+                            passwd=pseudo_password,
+                            username=new_account.username,
+                            app_id=appointment_id
+                        )
 
     message = (
         'Hello! \nYou are now successfully signed in to:'
@@ -425,10 +428,7 @@ def show_form_email(request, recipient_id):
     else:
         pass
 
-    latest_courses_list = []
-    for crs in Course.objects.order_by('-name'):
-        if crs.is_visible:
-            latest_courses_list.append(crs)
+    latest_courses_list = get_latest_courses_list()
 
     context = {'latest_courses_list': latest_courses_list,
                'logged_in_user': 'interested visitor',
@@ -514,10 +514,7 @@ def show_awesome_guys(request):
     # logout user if he or she navigates back to this page from an executive-view
     logout(request)
 
-    latest_courses_list = []
-    for crs in Course.objects.order_by('-name'):
-        if crs.is_visible:
-            latest_courses_list.append(crs)
+    latest_courses_list = get_latest_courses_list()
 
     context = {'latest_courses_list': latest_courses_list}
 
