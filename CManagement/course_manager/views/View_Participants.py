@@ -12,6 +12,13 @@ from django.contrib.auth import authenticate
 from django.utils import timezone
 
 
+def get_latest_courses_list():
+    return [
+        crs for crs in Course.objects.order_by('-name')
+        if crs.is_visible
+    ]
+
+
 def index(request):
     """
     This view shows the main page of our website.\n
@@ -24,10 +31,7 @@ def index(request):
     # logout user if he or she navigates back to this page from an executive-view
     logout(request)
 
-    latest_courses_list = []
-    for crs in Course.objects.order_by('-name'):
-        if crs.is_visible:
-            latest_courses_list.append(crs)
+    latest_courses_list = get_latest_courses_list()
 
     context = {'latest_courses_list': latest_courses_list}
 
@@ -64,10 +68,7 @@ def index_show_appointments(request, course_id):
            and appl.my_tutors.all().count() > 0:
                 course_apps.append(appl)
 
-    latest_courses_list = []
-    for crs in Course.objects.order_by('-name'):
-        if crs.is_visible:
-            latest_courses_list.append(crs)
+    latest_courses_list = get_latest_courses_list()
 
     context = {'appointment_list': course_apps,
                'latest_courses_list': latest_courses_list,
@@ -93,10 +94,7 @@ def show_app_information(request, appointment_id):
     else:
         pass
 
-    latest_courses_list = []
-    for crs in Course.objects.order_by('-name'):
-        if crs.is_visible:
-            latest_courses_list.append(crs)
+    latest_courses_list = get_latest_courses_list()
 
     context = {'selected_appointment': selected_appointment,
                'latest_courses_list': latest_courses_list,
@@ -122,10 +120,7 @@ def show_enroll(request, appointment_id):
     else:
         pass
 
-    latest_courses_list = []
-    for crs in Course.objects.order_by('-name'):
-        if crs.is_visible:
-            latest_courses_list.append(crs)
+    latest_courses_list = get_latest_courses_list()
 
     context = {'selected_appointment': selected_appointment,
                'latest_courses_list': latest_courses_list,
@@ -176,36 +171,25 @@ def process_enrollment(request, appointment_id):
     print(credit)
 
     # get the chosen faculty
-    if faculty == 'f1':
-        faculty = 'Faculty of Science'
-    elif faculty == 'f2':
-        faculty = 'Faculty of Education'
-    elif faculty == 'f3':
-        faculty = 'Faculty of Law'
-    elif faculty == 'f4':
-        faculty = 'Faculty of Arts, Humanities and Social Science'
-    elif faculty == 'f5':
-        faculty = 'Faculty of Linguistics, Literature and Cultural Studies'
-    elif faculty == 'f6':
-        faculty = 'Faculty of Business and Economics'
-    elif faculty == 'f7':
-        faculty = 'Faculty of Electrical and Computer Engineering'
-    elif faculty == 'f8':
-        faculty = 'Faculty of Computer Science'
-    elif faculty == 'f9':
-        faculty = 'Faculty of Mechanical Science and Engineering'
-    elif faculty == 'f10':
-        faculty = 'Faculty of Architecture'
-    elif faculty == 'f11':
-        faculty = 'Faculty of Civil Engineering'
-    elif faculty == 'f12':
-        faculty = 'Faculty of Environmental Sciences'
-    elif faculty == 'f13':
-        faculty = 'Faculty of Transportation and Traffic Science'
-    elif faculty == 'f14':
-        faculty = 'Faculty of Medicine Carl Gustav Carus'
-    else:
-        faculty = 'none'
+
+    faculties = {
+        'f1': 'Faculty of Science',
+        'f2': 'Faculty of Education',
+        'f3': 'Faculty of Law',
+        'f4': 'Faculty of Arts, Humanities and Social Science',
+        'f5': 'Faculty of Linguistics, Literature and Cultural Studies',
+        'f6': 'Faculty of Business and Economics',
+        'f7': 'Faculty of Electrical and Computer Engineering',
+        'f8': 'Faculty of Computer Science',
+        'f9': 'Faculty of Mechanical Science and Engineering',
+        'f10': 'Faculty of Architecture',
+        'f11': 'Faculty of Civil Engineering',
+        'f12': 'Faculty of Environmental Sciences',
+        'f13': 'Faculty of Transportation and Traffic Science',
+        'f14': 'Faculty of Medicine Carl Gustav Carus',
+        }
+
+    faculty = faculties.get(faculty, 'none')
 
     print(faculty)
 
@@ -279,17 +263,24 @@ def process_enrollment(request, appointment_id):
                         + "/" + new_account.username \
                         + "/" + appointment_id
 
-    message = "Hello! \nYou are now successfully signed in to:"\
-              + selected_appointment.my_course.name + "/"\
-              + selected_appointment.weekday + "/"\
-              + selected_appointment.lesson + "/"\
-              + selected_appointment.location + "\n\n"\
-              + "credit:"+credit + " faculty:" + faculty + "\n\n"\
-              + "Please use the link below within 24 hours to confirm your choice." + "\n"\
-              + confirmation_link
+    message = (
+        'Hello! \nYou are now successfully signed in to:'
+        '{course_name}/{weekday}/{lesson}/{location}\n\n'
+        'credit: {credit} faculty: {faculty} \n\n'
+        'Please use the link below within 24 hours to confirm your choice.\n'
+        '{link}'.format(
+            course_name=selected_appointment.my_course.name,
+            weekday=selected_appointment.weekday,
+            lesson=selected_appointment.lesson,
+            location=selected_appointment.location,
+            credit=credit,
+            faculty=faculty,
+            link=confirmation_link
+        )
+    )
 
     recipient = new_account.email
-    subject = "IFSR course registration ("+selected_appointment.my_course.name+")"
+    subject = "IFSR course registration ({})".format(selected_appointment.my_course.name)
     from_email = "ifsrcourses@gmail.com"
 
     if subject and message and from_email and recipient:
@@ -467,7 +458,7 @@ def send_email(request, recipient_id):
         pass
 
     message = request.POST.get('InputMessage', '')
-    subject = "Mail from site visitor to "+recipient.name_of_user
+    subject = "Mail from site visitor to {}".format(recipient.name_of_user)
     ##/ todo: what email adress to use for anonymous user?
     from_email = "noreply@ifsr.de"
     recipient = recipient.email
