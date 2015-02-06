@@ -15,6 +15,17 @@ from django.contrib.auth import logout
 from django.utils import timezone
 
 
+def get_course_apps(course):
+    return [
+        app for app in get_appointment_list()
+        if app.my_course.id == course.id
+    ]
+
+
+def get_appointment_list():
+    return Appointment.objects.order_by('-current_count_of_participants')
+
+
 @login_required
 def executives_index(request):
     """
@@ -209,11 +220,8 @@ def show_course_appointments(request, course_id):
     tutors_list = Tutor.objects.order_by('-date_joined')[:5]
     latest_courses_list = Course.objects.order_by('-name')[:5]
 
-    course_apps = []
-    appointment_list = Appointment.objects.order_by('-current_count_of_participants')
-    for app in appointment_list:
-        if app.my_course.id == course.id:
-            course_apps.append(app)
+
+    course_apps = get_course_apps(course)
 
     context = {'course': course,
                'appointment_list': course_apps,
@@ -1143,15 +1151,19 @@ def show_course_credits(request, course_id):
     tutors_list = Tutor.objects.order_by('-date_joined')[:5]
     latest_courses_list = Course.objects.order_by('-name')[:5]
 
-    part_list = []
-    course_apps = []
-    appointment_list = Appointment.objects.order_by('-current_count_of_participants')
-    for appl in appointment_list:
-        if appl.my_course.id == course.id:
-            course_apps.append(appl)
-            for participant in appl.my_participants.all():
-                if not participant.credit == 'none':
-                    part_list.append(participant)
+    appointment_list = get_appointment_list()
+    # this is unused???
+    # course_apps = [
+    #     appl for appl in appointment_list
+    #     if appl.my_course.id == course.id
+    # ]
+    part_list = [
+        (participant
+        for participant in appl.my_participants.all()
+        if not participant.credit == 'none')
+        for appl in appointment_list
+    ]
+
 
     context = {'course': course,
                'part_list': part_list,
@@ -1208,11 +1220,8 @@ def show_appointment_participants(request, app_id):
     tutors_list = Tutor.objects.order_by('-date_joined')[:5]
     latest_courses_list = Course.objects.order_by('-name')[:5]
 
-    course_apps = []
-    appointment_list = Appointment.objects.order_by('-current_count_of_participants')
-    for appl in appointment_list:
-        if appl.my_course.id == course.id:
-            course_apps.append(appl)
+    # this is unused???
+    # course_apps = get_course_apps(course)
 
     part_list = app.my_participants.all()
 
@@ -1275,11 +1284,8 @@ def show_add_participant(request, app_id):
     tutors_list = Tutor.objects.order_by('-date_joined')[:5]
     latest_courses_list = Course.objects.order_by('-name')[:5]
 
-    course_apps = []
-    appointment_list = Appointment.objects.order_by('-current_count_of_participants')
-    for appl in appointment_list:
-        if appl.my_course.id == course.id:
-            course_apps.append(appl)
+    # this is unused??? copy & paste code???
+    # course_apps = get_course_apps(course)
 
     part_list = app.my_participants.all()
     show_not_add = False
@@ -1361,14 +1367,12 @@ def add_participant_done(request, app_id):
         s_number = '- no s-number -'
 
     # first, check the database for a matching participant
-    new_account = None #Participant
 
     for account in Participant.objects.all():
         if account.username == username:
             new_account = account
             break
-
-    if not new_account:
+    else:
         # create a unique user account with the custom UserManager
         try:
             new_account = Participant.objects.create_user(username=username,
@@ -1382,7 +1386,7 @@ def add_participant_done(request, app_id):
             # error, redirect
             return HttpResponseRedirect(reverse('cmanagement:showAppointmentPart', args=[app_id]))
         # catch exception when account could not be created
-        except (KeyError, new_account.DoesNotExist):
+        except (KeyError, Participant.DoesNotExist):
             print("account exception 2")
             # error, redirect
             return HttpResponseRedirect(reverse('cmanagement:showAppointmentPart', args=[app_id]))
@@ -1396,10 +1400,16 @@ def add_participant_done(request, app_id):
     new_account.save()
 
     # send confirmation email to participant
-    message = "Hello! \nYou have been signed in to:" + selected_appointment.my_course.name + "/" \
-              + selected_appointment.weekday + "/" + selected_appointment.lesson + "/" + selected_appointment.location
+    message = ("Hello! \nYou have been signed in to:{course_name}"
+              "/{weekday}/{lesson}/{location}".format(
+            course_name=selected_appointment.my_course.name,
+            weekday=selected_appointment.weekday,
+            lesson=selected_appointment.lesson,
+            location=selected_appointment.location
+        )
+    )
     recipient = new_account
-    subject = "IFSR course registration (" + selected_appointment.my_course.name + ")"
+    subject = "IFSR course registration ({name})".format(selected_appointment.my_course.name)
     from_email = "ifsrcourses@gmail.com"
     recipient = recipient.email
 
@@ -1486,7 +1496,7 @@ def delete_participant(request, part_id, app_id):
                 b_enrolled = True
 
     if not b_enrolled:
-        print(" no other appointments for "+part.username+" found, deleting...")
+        print(" no other appointments for {user} found, deleting...".format(user=part.username))
         part.delete()
 
     #print(Participant.objects.all())
