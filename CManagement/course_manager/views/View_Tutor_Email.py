@@ -1,6 +1,5 @@
 from django.contrib.auth.decorators import login_required
 from course_manager.models.Appointment import Appointment
-from course_manager.models.Users.Tutor import Tutor
 from course_manager.models.Users.User import UserAccount
 from course_manager.models.Course import Course
 from django.shortcuts import render, get_object_or_404
@@ -9,6 +8,31 @@ from django.core.urlresolvers import reverse
 from django.core.mail import send_mail, BadHeaderError, send_mass_mail
 from smtplib import SMTPException
 from django.contrib.auth import logout
+from course_manager.util.courses import make_other_tutors_list
+
+
+
+def get_course_app_list(request):
+    def courses_gen():
+        for appl in Appointment.objects.all():
+            if appl.is_visible:
+                for tut in appl.my_tutors.all():
+                    if tut.username == request.user.username and appl.my_course.is_visible:
+                        yield appl.my_course
+
+    return list(courses_gen())
+
+
+def recipient_list_gen(course_apps, the_course):
+    for app in course_apps:
+        if app.my_course == the_course:
+            for part in app.my_participants.all():
+                yield part.email
+
+
+def get_recipient_list(course_apps, the_course):
+    return list(recipient_list_gen(course_apps, the_course))
+
 
 
 @login_required
@@ -51,20 +75,9 @@ def show_form_email_to_course(request, course_id):
     else:
         pass
 
-    other_tutors_list = []
-    tutors_list = Tutor.objects.all()
+    other_tutors_list = make_other_tutors_list(request)
 
-    for tut in tutors_list:
-        if not tut.username == request.user.username and tut.is_visible:
-            other_tutors_list.append(tut)
-
-    my_courses_list = []
-
-    for appl in Appointment.objects.all():
-        if appl.is_visible:
-            for tut in appl.my_tutors.all():
-                if tut.username == request.user.username and appl.my_course.is_visible:
-                    my_courses_list.append(appl.my_course)
+    my_courses_list = get_course_app_list(request)
 
     context = {'tutors_list': other_tutors_list,
                'my_courses_list': my_courses_list,
@@ -112,20 +125,8 @@ def show_form_email(request, recipient_id):
     else:
         pass
 
-    other_tutors_list = []
-    tutors_list = Tutor.objects.all()
-
-    for tut in tutors_list:
-        if not tut.username == request.user.username and tut.is_visible:
-            other_tutors_list.append(tut)
-
-    my_courses_list = []
-
-    for appl in Appointment.objects.all():
-        if appl.is_visible:
-            for tut in appl.my_tutors.all():
-                if tut.username == request.user.username and appl.my_course.is_visible:
-                    my_courses_list.append(appl.my_course)
+    other_tutors_list = make_other_tutors_list(request)
+    my_courses_list = get_course_app_list(request)
 
     context = {'tutors_list': other_tutors_list,
                'my_courses_list': my_courses_list,
@@ -229,22 +230,14 @@ def send_email_to_course(request, course_id):
     else:
         pass
 
-    course_apps = []
-    for appl in Appointment.objects.all():
-        if appl.is_visible:
-            for tut in appl.my_tutors.all():
-                if tut.username == request.user.username and appl.my_course.is_visible:
-                    course_apps.append(appl)
+    course_apps = get_course_app_list(request)
 
     message = request.POST.get('message', '')
     subject = "Mail from "+request.user.username+" to course: "+the_course.name
     from_email = "ifsrcourses@gmail.com"
 
-    recipient_list = []
-    for app in course_apps:
-        if app.my_course == the_course:
-            for part in app.my_participants.all():
-                recipient_list.append(part.email)
+    recipient_list = get_recipient_list(course_apps, the_course)
+
 
     # if there is no one to receive, return
     if not recipient_list:
