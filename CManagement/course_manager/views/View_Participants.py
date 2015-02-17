@@ -1,3 +1,5 @@
+import re
+
 from course_manager.models.Course import Course
 from course_manager.models.Appointment import Appointment
 from course_manager.models.Users.Participant import Participant
@@ -12,6 +14,38 @@ from django.contrib.auth import authenticate
 from django.utils import timezone
 
 
+AVAILABLE_CREDITS = {
+    'c1': 'AQUA',
+    'c3': 'extracurricular studies (studium generale)'
+}
+
+FACULTIES = {
+    'f1': 'Faculty of Science',
+    'f2': 'Faculty of Education',
+    'f3': 'Faculty of Law',
+    'f4': 'Faculty of Arts, Humanities and Social Science',
+    'f5': 'Faculty of Linguistics, Literature and Cultural Studies',
+    'f6': 'Faculty of Business and Economics',
+    'f7': 'Faculty of Electrical and Computer Engineering',
+    'f8': 'Faculty of Computer Science',
+    'f9': 'Faculty of Mechanical Science and Engineering',
+    'f10': 'Faculty of Architecture',
+    'f11': 'Faculty of Civil Engineering',
+    'f12': 'Faculty of Environmental Sciences',
+    'f13': 'Faculty of Transportation and Traffic Science',
+    'f14': 'Faculty of Medicine Carl Gustav Carus',
+}
+
+S_NUMBER_REGEX = re.compile("""^s(\d){7}$""")
+
+
+def get_latest_courses_list():
+    return [
+        crs for crs in Course.objects.order_by('-name')
+        if crs.is_visible
+    ]
+
+
 def index(request):
     """
     This view shows the main page of our website.\n
@@ -24,10 +58,7 @@ def index(request):
     # logout user if he or she navigates back to this page from an executive-view
     logout(request)
 
-    latest_courses_list = []
-    for crs in Course.objects.order_by('-name'):
-        if crs.is_visible:
-            latest_courses_list.append(crs)
+    latest_courses_list = get_latest_courses_list()
 
     context = {'latest_courses_list': latest_courses_list}
 
@@ -57,17 +88,14 @@ def index_show_appointments(request, course_id):
     if not selected_course:
         return HttpResponseRedirect(reverse('cmanagement:index'))
 
-    course_apps = []
     appointment_list = Appointment.objects.order_by('-current_count_of_participants')
-    for appl in appointment_list:
-        if appl.my_course.id == selected_course.id and appl.is_visible \
-           and appl.my_tutors.all().count() > 0:
-                course_apps.append(appl)
+    course_apps = [
+        appl for appl in appointment_list
+        if (appl.my_course.id == selected_course.id and appl.is_visible
+           and appl.my_tutors.all().count() > 0)
+    ]
 
-    latest_courses_list = []
-    for crs in Course.objects.order_by('-name'):
-        if crs.is_visible:
-            latest_courses_list.append(crs)
+    latest_courses_list = get_latest_courses_list()
 
     context = {'appointment_list': course_apps,
                'latest_courses_list': latest_courses_list,
@@ -93,10 +121,7 @@ def show_app_information(request, appointment_id):
     else:
         pass
 
-    latest_courses_list = []
-    for crs in Course.objects.order_by('-name'):
-        if crs.is_visible:
-            latest_courses_list.append(crs)
+    latest_courses_list = get_latest_courses_list()
 
     context = {'selected_appointment': selected_appointment,
                'latest_courses_list': latest_courses_list,
@@ -122,10 +147,7 @@ def show_enroll(request, appointment_id):
     else:
         pass
 
-    latest_courses_list = []
-    for crs in Course.objects.order_by('-name'):
-        if crs.is_visible:
-            latest_courses_list.append(crs)
+    latest_courses_list = get_latest_courses_list()
 
     context = {'selected_appointment': selected_appointment,
                'latest_courses_list': latest_courses_list,
@@ -150,7 +172,6 @@ def process_enrollment(request, appointment_id):
     :param appointment_id: the selected appointments database id
     :return: HttpResponseRedirect()
     """
-
     try:
         selected_appointment = get_object_or_404(Appointment, pk=appointment_id)
     except Http404:
@@ -158,69 +179,40 @@ def process_enrollment(request, appointment_id):
     else:
         pass
 
-    s_number = request.POST.get('snumber', '')
-    name = request.POST.get('nameInput', '')
-    name_of_user = name
-    name = name.replace(" ", "")
-    credit = request.POST.get('credit_dropdown', 'c0')
-    faculty = request.POST.get('faculty_dropdown', 'f0')
-
-    # get the chosen kind of credit
-    if credit == 'c1':
-        credit = 'AQUA'
-    elif credit == 'c3':
-        credit = 'extracurricular studies (studium generale)'
-    else:
-        credit = 'none'
-
-    print(credit)
-
-    # get the chosen faculty
-    if faculty == 'f1':
-        faculty = 'Faculty of Science'
-    elif faculty == 'f2':
-        faculty = 'Faculty of Education'
-    elif faculty == 'f3':
-        faculty = 'Faculty of Law'
-    elif faculty == 'f4':
-        faculty = 'Faculty of Arts, Humanities and Social Science'
-    elif faculty == 'f5':
-        faculty = 'Faculty of Linguistics, Literature and Cultural Studies'
-    elif faculty == 'f6':
-        faculty = 'Faculty of Business and Economics'
-    elif faculty == 'f7':
-        faculty = 'Faculty of Electrical and Computer Engineering'
-    elif faculty == 'f8':
-        faculty = 'Faculty of Computer Science'
-    elif faculty == 'f9':
-        faculty = 'Faculty of Mechanical Science and Engineering'
-    elif faculty == 'f10':
-        faculty = 'Faculty of Architecture'
-    elif faculty == 'f11':
-        faculty = 'Faculty of Civil Engineering'
-    elif faculty == 'f12':
-        faculty = 'Faculty of Environmental Sciences'
-    elif faculty == 'f13':
-        faculty = 'Faculty of Transportation and Traffic Science'
-    elif faculty == 'f14':
-        faculty = 'Faculty of Medicine Carl Gustav Carus'
-    else:
-        faculty = 'none'
-
-    print(faculty)
-
-    # check if we got everything we need to proceed
-    if not selected_appointment or not s_number or not name:
-        return HttpResponseRedirect(reverse('cmanagement:show_enroll', args=[appointment_id]))
-
-    # if participant wants a credit, we need the faculty as well
-    # redirect if no faculty or 'none' has been selected
-    ## \todo: show some kind of notification or error message
-    if not credit == 'none':
-        if not faculty or faculty == 'none':
+    # check the POST request for completeness
+    for identifier in (
+            'snumber',
+            'nameInput',
+            'credit_dropdown',
+            'faculty_dropdown'
+    ):
+        if identifier not in request.POST:
             return HttpResponseRedirect(reverse('cmanagement:show_enroll', args=[appointment_id]))
 
-    s_number = s_number.replace(" ", "")
+    s_number = request.POST['snumber']
+    name = request.POST['nameInput']
+    name_of_user = name
+    name = name.replace(" ", "")
+    credit = request.POST['credit_dropdown']
+    faculty = request.POST['faculty_dropdown']
+
+    # assert we have valid credit and/or faculty
+    if (
+        # credits are invalid
+        credit not in AVAILABLE_CREDITS
+
+        # the faculty is unknown
+        or faculty not in FACULTIES
+
+        # snumber has invalid structure
+        or not re.match(S_NUMBER_REGEX, s_number)
+    ):
+        # TODO: show some kind of notification or error message
+        return HttpResponseRedirect(reverse('cmanagement:show_enroll', args=[appointment_id]))
+
+    credit = AVAILABLE_CREDITS[credit]
+    faculty = FACULTIES[faculty]
+
     email = s_number+"@mail.zih.tu-dresden.de"
     username = name
 
@@ -255,8 +247,9 @@ def process_enrollment(request, appointment_id):
 
     # now that we have a "hovering" participant account, check if this one has already been signed in to this
     # appointment
-    ## \todo: show some kind of notification or error message
+    # TODO: show some kind of notification or error message
     for part in selected_appointment.my_participants.all():
+        # TODO optimize this by directly selecting the participants by email
         if part and part.email == new_account.email:
             print(" participant already signed in to this appointment. abort...")
             return HttpResponseRedirect(reverse('cmanagement:show_enroll', args=[appointment_id]))
@@ -274,22 +267,33 @@ def process_enrollment(request, appointment_id):
     new_account.set_password(pseudo_password)
     new_account.save()
     # TODO: replace hardcoded confirmation link below
-    confirmation_link = "https://www.ifsr.de/kurse/kurse/confirm/" \
-                        + str(pseudo_password) \
-                        + "/" + new_account.username \
-                        + "/" + appointment_id
+    confirmation_link = (
+        "https://www.ifsr.de/kurse/kurse/confirm/"
+        "{passwd}/{username}/{app_id}".format(
+            passwd=pseudo_password,
+            username=new_account.username,
+            app_id=appointment_id
+        )
+    )
 
-    message = "Hello! \nYou are now successfully signed in to:"\
-              + selected_appointment.my_course.name + "/"\
-              + selected_appointment.weekday + "/"\
-              + selected_appointment.lesson + "/"\
-              + selected_appointment.location + "\n\n"\
-              + "credit:"+credit + " faculty:" + faculty + "\n\n"\
-              + "Please use the link below within 24 hours to confirm your choice." + "\n"\
-              + confirmation_link
+    message = (
+        'Hello! \nYou are now successfully signed in to:'
+        '{course_name}/{weekday}/{lesson}/{location}\n\n'
+        'credit: {credit} faculty: {faculty} \n\n'
+        'Please use the link below within 24 hours to confirm your choice.\n'
+        '{link}'.format(
+            course_name=selected_appointment.my_course.name,
+            weekday=selected_appointment.weekday,
+            lesson=selected_appointment.lesson,
+            location=selected_appointment.location,
+            credit=credit,
+            faculty=faculty,
+            link=confirmation_link
+        )
+    )
 
     recipient = new_account.email
-    subject = "IFSR course registration ("+selected_appointment.my_course.name+")"
+    subject = "IFSR course registration ({})".format(selected_appointment.my_course.name)
     from_email = "ifsrcourses@gmail.com"
 
     if subject and message and from_email and recipient:
@@ -336,8 +340,6 @@ def confirm(request, confirmation_code, username, app_id):
     else:
         pass
 
-    part = None
-
     try:
         user = authenticate(username=username, password=confirmation_code)
         if user is not None and selected_appointment is not None:
@@ -370,8 +372,7 @@ def confirm(request, confirmation_code, username, app_id):
             # nope, try again!
             print("no match")
             return HttpResponseRedirect(reverse('cmanagement:noteTimeoutPart'))
-    ## \todo part not declared in the case try doesnt work, part declared now as none -> exception has to test
-    except(KeyError, part.DoesNotExist):
+    except(KeyError, Participant.DoesNotExist):
         print("exeption")
         return HttpResponseRedirect(reverse('cmanagement:index'))
 
@@ -434,10 +435,7 @@ def show_form_email(request, recipient_id):
     else:
         pass
 
-    latest_courses_list = []
-    for crs in Course.objects.order_by('-name'):
-        if crs.is_visible:
-            latest_courses_list.append(crs)
+    latest_courses_list = get_latest_courses_list()
 
     context = {'latest_courses_list': latest_courses_list,
                'logged_in_user': 'interested visitor',
@@ -463,16 +461,18 @@ def send_email(request, recipient_id):
         recipient = get_object_or_404(UserAccount, pk=recipient_id)
     except Http404:
         return HttpResponseRedirect('cmanagement:newEmailFormPart', args=[recipient_id])
-    else:
-        pass
 
-    message = request.POST.get('InputMessage', '')
-    subject = "Mail from site visitor to "+recipient.name_of_user
-    ##/ todo: what email adress to use for anonymous user?
+    if 'InputMessage' not in request.POST:
+        return HttpResponseRedirect('cmanagement:newEmailFormPart', args=[recipient_id])
+
+    message = request.POST['InputMessage']
+
+    subject = "Mail from site visitor to {}".format(recipient.name_of_user)
+    # TODO: what email address to use for anonymous user?
     from_email = "noreply@ifsr.de"
     recipient = recipient.email
 
-    if subject and message and from_email:
+    if subject and message:
         try:
             send_mail(subject, message, from_email, [recipient])
         except BadHeaderError:
@@ -523,10 +523,7 @@ def show_awesome_guys(request):
     # logout user if he or she navigates back to this page from an executive-view
     logout(request)
 
-    latest_courses_list = []
-    for crs in Course.objects.order_by('-name'):
-        if crs.is_visible:
-            latest_courses_list.append(crs)
+    latest_courses_list = get_latest_courses_list()
 
     context = {'latest_courses_list': latest_courses_list}
 
