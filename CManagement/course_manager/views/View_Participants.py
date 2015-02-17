@@ -259,12 +259,14 @@ def process_enrollment(request, appointment_id):
     new_account.set_password(pseudo_password)
     new_account.save()
     # TODO: replace hardcoded confirmation link below
-    confirmation_link = "https://www.ifsr.de/kurse/kurse/confirm/" \
-                        "{passwd}/{username}/{app_id}".format(
-                            passwd=pseudo_password,
-                            username=new_account.username,
-                            app_id=appointment_id
-                        )
+    confirmation_link = (
+        "https://www.ifsr.de/kurse/kurse/confirm/"
+        "{passwd}/{username}/{app_id}".format(
+            passwd=pseudo_password,
+            username=new_account.username,
+            app_id=appointment_id
+        )
+    )
 
     message = (
         'Hello! \nYou are now successfully signed in to:'
@@ -330,7 +332,6 @@ def confirm(request, confirmation_code, username, app_id):
     else:
         pass
 
-    part = None
 
     try:
         user = authenticate(username=username, password=confirmation_code)
@@ -364,8 +365,7 @@ def confirm(request, confirmation_code, username, app_id):
             # nope, try again!
             print("no match")
             return HttpResponseRedirect(reverse('cmanagement:noteTimeoutPart'))
-    ## \todo part not declared in the case try doesnt work, part declared now as none -> exception has to test
-    except(KeyError, part.DoesNotExist):
+    except(KeyError, Participant.DoesNotExist):
         print("exeption")
         return HttpResponseRedirect(reverse('cmanagement:index'))
 

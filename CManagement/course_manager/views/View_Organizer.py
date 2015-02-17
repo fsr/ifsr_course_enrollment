@@ -1054,9 +1054,13 @@ def create_tutor(request):
         return HttpResponseRedirect(reverse('cmanagement:newLoginForm'))
     # </SECURITY_BLOCK>
 
-    name = request.POST.get('newname', '')
-    email = request.POST.get('newemail', '')
-    s_number = request.POST.get('s_number', 's0000000')
+    for identifier in ('newname', 'newemail', 's_number'):
+        if identifier not in request.POST:
+            return HttpResponseRedirect(reverse('cmanagement:newLoginForm'))
+
+    name = request.POST['newname']
+    email = request.POST['newemail']
+    s_number = request.POST['s_number']
 
     first_password = Tutor.objects.make_random_password()
     new_tutor_account = Tutor
@@ -1348,12 +1352,12 @@ def add_participant_done(request, app_id):
         return HttpResponseRedirect(reverse('cmanagement:showAppointmentPart', args=[app_id]))
 
     # if "add by s-number" is selected we need a s-number
-    # # \todo: show some kind of notification or error message
+    # TODO: show some kind of notification or error message
     if add_mode == 'r0' and not s_number:
         return HttpResponseRedirect(reverse('cmanagement:showAddPart', args=[app_id]))
 
     # if "add by email" is selected we need an email adress
-    ## \todo: show some kind of notification or error message
+    # TODO: show some kind of notification or error message
     if add_mode == 'r1' and not e_mail:
         return HttpResponseRedirect(reverse('cmanagement:showAddPart', args=[app_id]))
 
