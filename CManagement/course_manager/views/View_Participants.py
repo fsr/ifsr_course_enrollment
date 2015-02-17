@@ -88,7 +88,6 @@ def index_show_appointments(request, course_id):
     if not selected_course:
         return HttpResponseRedirect(reverse('cmanagement:index'))
 
-
     appointment_list = Appointment.objects.order_by('-current_count_of_participants')
     course_apps = [
         appl for appl in appointment_list
@@ -250,6 +249,7 @@ def process_enrollment(request, appointment_id):
     # appointment
     # TODO: show some kind of notification or error message
     for part in selected_appointment.my_participants.all():
+        # TODO optimize this by directly selecting the participants by email
         if part and part.email == new_account.email:
             print(" participant already signed in to this appointment. abort...")
             return HttpResponseRedirect(reverse('cmanagement:show_enroll', args=[appointment_id]))
@@ -461,16 +461,18 @@ def send_email(request, recipient_id):
         recipient = get_object_or_404(UserAccount, pk=recipient_id)
     except Http404:
         return HttpResponseRedirect('cmanagement:newEmailFormPart', args=[recipient_id])
-    else:
-        pass
 
-    message = request.POST.get('InputMessage', '')
+    if 'InputMessage' not in request.POST:
+        return HttpResponseRedirect('cmanagement:newEmailFormPart', args=[recipient_id])
+
+    message = request.POST['InputMessage']
+
     subject = "Mail from site visitor to {}".format(recipient.name_of_user)
-    # TODO: what email adress to use for anonymous user?
+    # TODO: what email address to use for anonymous user?
     from_email = "noreply@ifsr.de"
     recipient = recipient.email
 
-    if subject and message and from_email:
+    if subject and message:
         try:
             send_mail(subject, message, from_email, [recipient])
         except BadHeaderError:
