@@ -1,3 +1,5 @@
+import re
+
 from course_manager.models.Course import Course
 from course_manager.models.Appointment import Appointment
 from course_manager.models.Users.Participant import Participant
@@ -10,6 +12,31 @@ from django.db import IntegrityError
 from django.core.mail import send_mail, BadHeaderError
 from django.contrib.auth import authenticate
 from django.utils import timezone
+
+
+AVAILABLE_CREDITS = {
+    'c1': 'AQUA',
+    'c3': 'extracurricular studies (studium generale)'
+}
+
+FACULTIES = {
+    'f1': 'Faculty of Science',
+    'f2': 'Faculty of Education',
+    'f3': 'Faculty of Law',
+    'f4': 'Faculty of Arts, Humanities and Social Science',
+    'f5': 'Faculty of Linguistics, Literature and Cultural Studies',
+    'f6': 'Faculty of Business and Economics',
+    'f7': 'Faculty of Electrical and Computer Engineering',
+    'f8': 'Faculty of Computer Science',
+    'f9': 'Faculty of Mechanical Science and Engineering',
+    'f10': 'Faculty of Architecture',
+    'f11': 'Faculty of Civil Engineering',
+    'f12': 'Faculty of Environmental Sciences',
+    'f13': 'Faculty of Transportation and Traffic Science',
+    'f14': 'Faculty of Medicine Carl Gustav Carus',
+}
+
+S_NUMBER_REGEX = re.compile("""^s(\d){7}$""")
 
 
 def get_latest_courses_list():
@@ -146,7 +173,6 @@ def process_enrollment(request, appointment_id):
     :param appointment_id: the selected appointments database id
     :return: HttpResponseRedirect()
     """
-
     try:
         selected_appointment = get_object_or_404(Appointment, pk=appointment_id)
     except Http404:
@@ -154,58 +180,40 @@ def process_enrollment(request, appointment_id):
     else:
         pass
 
-    s_number = request.POST.get('snumber', '')
-    name = request.POST.get('nameInput', '')
-    name_of_user = name
-    name = name.replace(" ", "")
-    credit = request.POST.get('credit_dropdown', 'c0')
-    faculty = request.POST.get('faculty_dropdown', 'f0')
-
-    # get the chosen kind of credit
-    avail_credits = {
-        'c1': 'AQUA',
-        'c3': 'extracurricular studies (studium generale)'
-    }
-
-    credit = avail_credits.get(credit, 'none')
-
-    print(credit)
-
-    # get the chosen faculty
-
-    faculties = {
-        'f1': 'Faculty of Science',
-        'f2': 'Faculty of Education',
-        'f3': 'Faculty of Law',
-        'f4': 'Faculty of Arts, Humanities and Social Science',
-        'f5': 'Faculty of Linguistics, Literature and Cultural Studies',
-        'f6': 'Faculty of Business and Economics',
-        'f7': 'Faculty of Electrical and Computer Engineering',
-        'f8': 'Faculty of Computer Science',
-        'f9': 'Faculty of Mechanical Science and Engineering',
-        'f10': 'Faculty of Architecture',
-        'f11': 'Faculty of Civil Engineering',
-        'f12': 'Faculty of Environmental Sciences',
-        'f13': 'Faculty of Transportation and Traffic Science',
-        'f14': 'Faculty of Medicine Carl Gustav Carus',
-        }
-
-    faculty = faculties.get(faculty, 'none')
-
-    print(faculty)
-
-    # check if we got everything we need to proceed
-    if not selected_appointment or not s_number or not name:
-        return HttpResponseRedirect(reverse('cmanagement:show_enroll', args=[appointment_id]))
-
-    # if participant wants a credit, we need the faculty as well
-    # redirect if no faculty or 'none' has been selected
-    ## \todo: show some kind of notification or error message
-    if not credit == 'none':
-        if not faculty or faculty == 'none':
+    # check the POST request for completeness
+    for identifier in (
+            'snumber',
+            'nameInput',
+            'credit_dropdown',
+            'faculty_dropdown'
+    ):
+        if identifier not in request.POST:
             return HttpResponseRedirect(reverse('cmanagement:show_enroll', args=[appointment_id]))
 
-    s_number = s_number.replace(" ", "")
+    s_number = request.POST['snumber']
+    name = request.POST['nameInput']
+    name_of_user = name
+    name = name.replace(" ", "")
+    credit = request.POST['credit_dropdown']
+    faculty = request.POST['faculty_dropdown']
+
+    # assert we have valid credit and/or faculty
+    if (
+        # credits are invalid
+        credit not in AVAILABLE_CREDITS
+
+        # the faculty is unknown
+        or faculty not in FACULTIES
+
+        # snumber has invalid structure
+        or not re.match(S_NUMBER_REGEX, s_number)
+    ):
+        # TODO: show some kind of notification or error message
+        return HttpResponseRedirect(reverse('cmanagement:show_enroll', args=[appointment_id]))
+
+    credit = AVAILABLE_CREDITS[credit]
+    faculty = FACULTIES[faculty]
+
     email = s_number+"@mail.zih.tu-dresden.de"
     username = name
 
@@ -240,7 +248,7 @@ def process_enrollment(request, appointment_id):
 
     # now that we have a "hovering" participant account, check if this one has already been signed in to this
     # appointment
-    ## \todo: show some kind of notification or error message
+    # TODO: show some kind of notification or error message
     for part in selected_appointment.my_participants.all():
         if part and part.email == new_account.email:
             print(" participant already signed in to this appointment. abort...")
@@ -331,7 +339,6 @@ def confirm(request, confirmation_code, username, app_id):
         return HttpResponseRedirect(reverse('cmanagement:index'))
     else:
         pass
-
 
     try:
         user = authenticate(username=username, password=confirmation_code)
@@ -459,7 +466,7 @@ def send_email(request, recipient_id):
 
     message = request.POST.get('InputMessage', '')
     subject = "Mail from site visitor to {}".format(recipient.name_of_user)
-    ##/ todo: what email adress to use for anonymous user?
+    # TODO: what email adress to use for anonymous user?
     from_email = "noreply@ifsr.de"
     recipient = recipient.email
 
