@@ -55,3 +55,6 @@ target/
 
 # Databases
 *.sqlite3
+
+# Project files
+.idea/
