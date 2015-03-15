@@ -30,7 +30,7 @@ class Course(models.Model):
     name = models.CharField(max_length=100)
     my_course_management = models.ForeignKey(CourseManagement)
     # set visibility
-    is_visible = models.BooleanField(default=False, name='visible')
+    is_visible = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name

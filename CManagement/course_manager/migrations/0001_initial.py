@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(serialize=False, verbose_name='ID', auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=100)),
-                ('visible', models.BooleanField(default=False)),
+                ('is_visible', models.BooleanField(default=False)),
             ],
             options={
             },
@@ -81,7 +81,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('useraccount_ptr', models.OneToOneField(serialize=False, to='course_manager.UserAccount',
                                                          auto_created=True, parent_link=True, primary_key=True)),
-                ('is_visibly', models.BooleanField(default=True)),
+                ('is_visible', models.BooleanField(default=True)),
             ],
             options={
                 'abstract': False,
