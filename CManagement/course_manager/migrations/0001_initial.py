@@ -93,6 +93,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('useraccount_ptr', models.OneToOneField(serialize=False, to='course_manager.UserAccount',
                                                          auto_created=True, parent_link=True, primary_key=True)),
+                ('faculty', models.CharField(serialize=False, null=True, max_length=50)),
+                ('credit', models.CharField(serialize=False, null=True, max_length=50))
             ],
             options={
                 'ordering': ('name_of_user',),
