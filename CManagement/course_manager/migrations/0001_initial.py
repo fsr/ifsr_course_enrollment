@@ -158,7 +158,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='appointment',
-            name='my_tutor',
+            name='my_tutors',
             field=models.ManyToManyField(to='course_manager.Tutor'),
             preserve_default=True,
         ),
