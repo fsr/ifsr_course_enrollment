@@ -69,8 +69,7 @@ def show_form_login(request):
                 email="ifsrcourse@gmail.com",
                 password="test",
                 name_of_user="Horatio Cane",
-                s_number="s196456",
-                register_date=datetime()
+                s_number="s196456"
             )
 
             # not catching these exceptions anymore, vvvvvvvv
