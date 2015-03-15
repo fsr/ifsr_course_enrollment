@@ -66,8 +66,8 @@ class Migration(migrations.Migration):
                                                   parent_link=True, primary_key=True)),
                 ('name_of_user', models.CharField(max_length=100)),
                 ('s_number', models.CharField(max_length=200)),
-                ('register_date', models.DateTimeField(verbose_name='registration date',
-                                                       default=django.utils.timezone.now)),
+                # ('register_date', models.DateTimeField(verbose_name='registration date',
+                #                                        default=django.utils.timezone.now)),
             ],
             options={
                 'verbose_name_plural': 'users',

@@ -1,4 +1,3 @@
-import datetime.datetime
 from course_manager.models.Users.Executive import Executive
 from course_manager.models.Users.Organizer import Organizer
 from course_manager.models.Users.Tutor import Tutor
