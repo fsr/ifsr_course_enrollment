@@ -1,5 +1,5 @@
 """
-Django settings for CManagement project.
+Django settings for cource manager project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.6/topics/settings/
@@ -20,7 +20,7 @@ DEBUG = True
 TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = [
-    'www.ifsr.de', 
+    'www.ifsr.de',
     'ifsr.de',
 ]
 
@@ -48,9 +48,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'CManagement.urls'
+ROOT_URLCONF = 'cm_config.urls'
 
-WSGI_APPLICATION = 'CManagement.wsgi.application'
+WSGI_APPLICATION = 'cm_config.wsgi.application'
 
 DATABASES = {
     'default': {
@@ -76,7 +76,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 
 
-STATIC_URL = '/CManagement/course_manager/static/'
+STATIC_URL = '/src/course_manager/static/'
 #STATIC_URL = 'https://www.ifsr.de/static/'
 
 EMAIL_USE_TLS = True
