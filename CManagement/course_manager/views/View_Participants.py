@@ -268,7 +268,7 @@ def process_enrollment(request, appointment_id):
     new_account.save()
     # TODO: replace hardcoded confirmation link below
     confirmation_link = (
-        "https://www.ifsr.de/kurse/kurse/confirm/"
+        "https://www.ifsr.de/kurse/confirm/"
         "{passwd}/{username}/{app_id}".format(
             passwd=pseudo_password,
             username=new_account.username,
