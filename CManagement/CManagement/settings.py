@@ -13,7 +13,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '*yk(vef1+*7)$576_#t@pan1!gugq5eo+++%&4=*qou_7%(ljr'
 
-#TODO: Turn off Debug mode
+# TODO: Turn off Debug mode
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
     'course_manager',)
 
 MIDDLEWARE_CLASSES = (

@@ -32,8 +32,8 @@ def show_form_login(request):
 
     # define account for exception handling
     account = Executive
-    tutor_account_1 = Tutor
-    tutor_account_2 = Tutor
+    # tutor_account_1 = Tutor
+    # tutor_account_2 = Tutor
     app1 = Appointment
     app2 = Appointment
 
@@ -56,24 +56,33 @@ def show_form_login(request):
         um = UserManagement(my_management=Management.objects.all()[0])
         um.save()
 
-    # if management has been initialized, create a test Organizer and two Tutors for testing
+    # if management has been initialized,
+    # create a test Organizer and two Tutors for testing
     else:
         if not Organizer.objects.all():
             # create a unique organizer account with the custom UserManager
-            try:
-                account = Organizer.objects.create_user(email="ifsrcourse@gmail.com",
-                                                        password="test",
-                                                        name_of_user="Horatio Cane",
-                                                        s_number="s196456")
+            # try:
+
+
+            account = Organizer.objects.create_user(
+                email="ifsrcourse@gmail.com",
+                password="test",
+                name_of_user="Horatio Cane",
+                s_number="s196456"
+            )
+
+            # not catching these exceptions anymore, vvvvvvvv
+            # if something goes wrong i want to know vvvvvvvv
+
             # catch exception when UNIQUE constraint fails
-            except IntegrityError as e:
-                print(e.__cause__)
-            # catch exception when account could not be created
-            except (KeyError, account.DoesNotExist):
-                print("account exception 2")
-            # if everything went well, proceed to model-object creation
-            else:
-                print("account success")
+            # except IntegrityError as e:
+            #     print(e.__cause__)
+            # # catch exception when account could not be created
+            # except (KeyError, account.DoesNotExist):
+            #     print("account exception 2")
+            # # if everything went well, proceed to model-object creation
+            # else:
+            #     print("account success")
 
         # for test purposes, we create a course with several appointments and assign tutors to it
         if not (Course.objects.all()):
@@ -101,36 +110,47 @@ def show_form_login(request):
         if not Tutor.objects.all() and Appointment.objects.all().count() > 0:
             print("Tutors!")
             # create a unique user account with the custom UserManager
-            try:
-                tutor_account_1 = Tutor.objects.create_user(email="bud@chickenfattening.org",
-                                                            password="spencer",
-                                                            name_of_user="Bud Spencer",
-                                                            s_number="s198385")
-            # catch exception when UNIQUE constraint fails
-            except IntegrityError as e:
-                print(e.__cause__)
-            # catch exception when account could not be created
-            except (KeyError, tutor_account_1.DoesNotExist):
-                print("account exception 2")
-            # if everything went well, proceed to model-object creation
-            else:
-                print("account success t1")
+
+
+            # try:
+            tutor_account_1 = Tutor.objects.create_user(
+                email="bud@chickenfattening.org",
+                password="spencer",
+                name_of_user="Bud Spencer",
+                s_number="s198385"
+            )
+
+            # not catching these exceptions anymore, vvvvvvvv
+            # if something goes wrong i want to know vvvvvvvv
+
+
+            # # catch exception when UNIQUE constraint fails
+            # except IntegrityError as e:
+            #     print(e.__cause__)
+            # # catch exception when account could not be created
+            # except (KeyError, tutor_account_1.DoesNotExist):
+            #     print("account exception 2")
+            # # if everything went well, proceed to model-object creation
+            # else:
+            #     print("account success t1")
 
             # create a unique user account with the custom UserManager
-            try:
-                tutor_account_2 = Tutor.objects.create_user(email="terrence@chickenfattening.org",
-                                                            password="hill",
-                                                            name_of_user="Terrence Hill",
-                                                            s_number="s195585")
-            # catch exception when UNIQUE constraint fails
-            except IntegrityError as e:
-                print(e.__cause__)
-            # catch exception when account could not be created
-            except (KeyError, tutor_account_2.DoesNotExist):
-                print("account exception 2")
-            # if everything went well, proceed to model-object creation
-            else:
-                print("account success t2")
+            # try:
+            tutor_account_2 = Tutor.objects.create_user(
+                email="terrence@chickenfattening.org",
+                password="hill",
+                name_of_user="Terrence Hill",
+                s_number="s195585"
+            )
+            # # catch exception when UNIQUE constraint fails
+            # except IntegrityError as e:
+            #     print(e.__cause__)
+            # # catch exception when account could not be created
+            # except (KeyError, tutor_account_2.DoesNotExist):
+            #     print("account exception 2")
+            # # if everything went well, proceed to model-object creation
+            # else:
+            #     print("account success t2")
 
             # lets assign tutor 1 to both appointments
             if tutor_account_1 and app1:

@@ -97,10 +97,11 @@ def index_show_appointments(request, course_id):
 
     latest_courses_list = get_latest_courses_list()
 
-    context = {'appointment_list': course_apps,
-               'latest_courses_list': latest_courses_list,
-               'selected_course': selected_course
-               }
+    context = {
+        'appointment_list': course_apps,
+        'latest_courses_list': latest_courses_list,
+        'selected_course': selected_course
+    }
     return render(request, 'cmanagement/index.html', context)
 
 
@@ -123,9 +124,11 @@ def show_app_information(request, appointment_id):
 
     latest_courses_list = get_latest_courses_list()
 
-    context = {'selected_appointment': selected_appointment,
-               'latest_courses_list': latest_courses_list,
-               'no_certification_selected': True}
+    context = {
+        'selected_appointment': selected_appointment,
+        'latest_courses_list': latest_courses_list,
+        'no_certification_selected': True
+    }
 
     return render(request, 'cmanagement/index_show_app_info.html', context)
 
@@ -213,7 +216,7 @@ def process_enrollment(request, appointment_id):
     credit = AVAILABLE_CREDITS[credit]
     faculty = FACULTIES[faculty]
 
-    email = s_number+"@mail.zih.tu-dresden.de"
+    email = s_number + "@mail.zih.tu-dresden.de"
     username = name
 
     # first, check the database for a matching participant
@@ -245,7 +248,8 @@ def process_enrollment(request, appointment_id):
         else:
             pass
 
-    # now that we have a "hovering" participant account, check if this one has already been signed in to this
+    # now that we have a "hovering" participant account,
+    # check if this one has already been signed in to this
     # appointment
     # TODO: show some kind of notification or error message
     for part in selected_appointment.my_participants.all():
@@ -437,9 +441,11 @@ def show_form_email(request, recipient_id):
 
     latest_courses_list = get_latest_courses_list()
 
-    context = {'latest_courses_list': latest_courses_list,
-               'logged_in_user': 'interested visitor',
-               'recipient': recipient}
+    context = {
+        'latest_courses_list': latest_courses_list,
+        'logged_in_user': 'interested visitor',
+        'recipient': recipient
+    }
     return render(request, 'cmanagement/participant_message.html', context)
 
 

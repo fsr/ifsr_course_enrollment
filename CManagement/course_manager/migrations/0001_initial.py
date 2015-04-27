@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(serialize=False, verbose_name='ID', auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=100)),
-                ('visible', models.BooleanField(default=False)),
+                ('is_visible', models.BooleanField(default=False)),
             ],
             options={
             },
@@ -66,8 +66,8 @@ class Migration(migrations.Migration):
                                                   parent_link=True, primary_key=True)),
                 ('name_of_user', models.CharField(max_length=100)),
                 ('s_number', models.CharField(max_length=200)),
-                ('register_date', models.DateTimeField(verbose_name='registration date',
-                                                       default=django.utils.timezone.now)),
+                # ('register_date', models.DateTimeField(verbose_name='registration date',
+                #                                        default=django.utils.timezone.now)),
             ],
             options={
                 'verbose_name_plural': 'users',
@@ -81,7 +81,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('useraccount_ptr', models.OneToOneField(serialize=False, to='course_manager.UserAccount',
                                                          auto_created=True, parent_link=True, primary_key=True)),
-                ('is_visibly', models.BooleanField(default=True)),
+                ('is_visible', models.BooleanField(default=True)),
             ],
             options={
                 'abstract': False,
@@ -93,6 +93,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('useraccount_ptr', models.OneToOneField(serialize=False, to='course_manager.UserAccount',
                                                          auto_created=True, parent_link=True, primary_key=True)),
+                ('faculty', models.CharField(serialize=False, null=True, max_length=50)),
+                ('credit', models.CharField(serialize=False, null=True, max_length=50))
             ],
             options={
                 'ordering': ('name_of_user',),
@@ -158,7 +160,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='appointment',
-            name='my_tutor',
+            name='my_tutors',
             field=models.ManyToManyField(to='course_manager.Tutor'),
             preserve_default=True,
         ),
