@@ -57,11 +57,7 @@
                     <a href="{% url 'cmanagement:teamcredits' %}">Team</a>
                     <a href="{% url 'cmanagement:resetPW' %}">Reset Password</a>
                     <a href="{% url 'cmanagement:Logout' %}">Logout</a>
-                    {% if appointment_list %}
-                        <a href="{% url 'cmanagement:exec' %}" ><span class="glyphicon glyphicon-chevron-left" title="back"></span></a>
-                    {%else%}
-                        <a href="{% url 'cmanagement:showCourseAppointments' course.id %}" ><span class="glyphicon glyphicon-chevron-left" title="back"></span></a>
-                    {%endif%}
+                    <a href="{% url 'cmanagement:exec' %}" ><span class="glyphicon glyphicon-chevron-left" title="back"></span></a>
                 </header>
                 <div class="box">
                     {% if message %}
