@@ -4,7 +4,7 @@
     <meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>IFSR Course Management | appointments</title>
+		<title>IFSR Course Management | Enrollment</title>
 		<meta name="description" content="Course Enrollment of the IFSR TU Dresden. Software Technology Group, TU Dresden, 2014/2015">
 		<meta name="author" content="SWT10/14">
 		<!-- Normalize CSS v1.1.0 | MIT License | http://www.git.io/normalize -->
@@ -17,319 +17,252 @@
 		<link href="{{ STATIC_URL }}css/custom.css" rel="stylesheet">
 		<!-- java script -->
 		<!-- notification window after enrollment -->
-
 		<noscript><p><br>Your browser currently does not support JavaScript! Please activate JavaScript to use this site properly.</p></noscript>
-  </head>
+    </head>
+    <body>
+        <div class="container">
+            <header id="mainHeader">
+                <a class="headline" href="{% url 'cmanagement:exec' %}">IFSR course enrollment</a>
+                <a href ="https://www.ifsr.de/start"><img src="{{ STATIC_URL }}img/fsrlogo.png"></a>
+            </header>
 
-		<body>
+            <nav class="col-xs-12 col-md-2">
+                <header class="subHeader">Courses<a href="{% url 'cmanagement:addCourseForm' %}">add</a></header>
+                <div class="box">
+                    {% if latest_courses_list %}
+                        {% for course in latest_courses_list %}
+                            <a href="{% url 'cmanagement:showAppointments' course.id %}">{{ course.name }}</a>
+                        {% endfor %}
+                    {%else%}
+                        no courses available
+                    {%endif%}
+                </div>
 
-		<div class = "container">
+                <header class="subHeader">Tutors<a href="{% url 'cmanagement:addTutorForm' %}">add</a></header>
+                <div class="box">
+                    {% if tutors_list %}
+                        {% for tutor in tutors_list %}
+                            <a href="{% url 'cmanagement:editTutorForm' tutor.id%}">{{ tutor.name_of_user }}</a> <a href="{% url 'cmanagement:newEmailFormOrga' tutor.id %}"><span class="glyphicon glyphicon-envelope" title="message tutor"></span></a>
+                        {% endfor %}
+                            <a href="{% url 'cmanagement:orgaShowAllTutors' %}" title="show all tutors">show all <span class="glyphicon glyphicon-chevron-right"></span></a>
+                    {%else%}
+                        no Tutors available
+                    {%endif%}
+                </div>
+            </nav>
 
-			<div class="row">
-				<div class="col-sm-6 col-md-6 col-lg-6">
-					<h1><a href="{% url 'cmanagement:exec' %}">IFSR course enrollment</a></h1>
-				</div>
-                <div class="col-sm-1 col-md-1 col-lg-1">
-					<div class="edit">
-						<a href="{% url 'cmanagement:resetPW' %}">Reset password</a>
-					</div>
-				</div>
-				<div class="col-sm-4 col-md-4 col-lg-4">
-					<a href ="https://www.ifsr.de/start"><img src="{{ STATIC_URL }}img/fsrlogo.png" width="100px" height="100px"></a>
-				</div>
-			</div>
+            <section class="col-xs-12 col-md-10">
+                <header class="subHeader">
+                    <a href="/kurse/faq/">Questions?</a>
+                    <a href="{% url 'cmanagement:teamcredits' %}">Team</a>
+                    <a href="{% url 'cmanagement:resetPW' %}">Reset Password</a>
+                    <a href="{% url 'cmanagement:Logout' %}">Logout</a>
+                    <a href="{% url 'cmanagement:showCourseAppointments' course.id %}" ><span class="glyphicon glyphicon-chevron-left" title="back"></span></a>
+                </header>
+                <div class="box">
+                    {% if appointment_list %}
+                        <p><a href="{% url 'cmanagement:delCourseFormDone' course.id %}">delete course<span class="glyphicon glyphicon-trash" title="delete course"></span></a>
+                             <wbr><a href="{% url 'cmanagement:toggleCourseVis' course.id %}">
+                                | course visibility:
+                                {% if course.is_visible %}
+                                    <span class="glyphicon glyphicon-eye-open" title="visible for all users, set visible for Organizer only?"></span>
+                                {% else %}
+                                    <span class="glyphicon glyphicon-eye-close" title="visible for Organizer only, set visible for all users?"></span>
+                                {% endif %}
+                            </a>
+                            <wbr>
+                        <p><a href="{% url 'cmanagement:showCourseCredits' course.id %}">show credit data <span class="glyphicon glyphicon-list" title="show credit data for this course"></span></a>
+                            <wbr>
+                            <a href="{% url 'cmanagement:newMEmailFormOrga' course.id %}">
 
-			<div class="row">
-				<div class="col-sm-2 col-md-2 col-lg-2">
-					<div class="small-head">
-						<small>Courses </small>
-                        <div class="editCourse">
-                                <a href="{% url 'cmanagement:addCourseForm' %}">add</a>
-                        </div>
-					</div>
-				</div>
+                                | message whole course
+                                <span class="glyphicon glyphicon-envelope"></span>
+                            </a>
+                        </p>
+                        <p><h2>appointments for course: {{course.name}}</h2></p>
+                        <p><a href="{% url 'cmanagement:newAppointmentForm' course.id %}">
+                            add appointment <span class="glyphicon glyphicon-plus" title="add appointment to this course"></span>
+                        </a></p>
+                        <table class="table table-striped">
+                        <tbody>
+                        <tr>
+                            <th>day</th>
+                            <th>time</th>
+                            <th>location</th>
+                            <th>tutor</th>
+                            <th>attendance</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
 
-				<div class="col-sm-10 col-md-10 col-lg-10">
-					<div id="content-head">
-                        <div class="backButton">
-							<a href="{% url 'cmanagement:exec' %}" ><span class="glyphicon glyphicon-chevron-left" title="back"></span></a>
-						</div>
-						<div class="logoutButton">
-							<a href="{% url 'cmanagement:Logout' %}">Logout</a>
-						</div>
-					</div>
-				</div>
-			</div>
 
-			<div class="row">
-				<div class="col-sm-2 col-md-2 col-lg-2">
-					<div class="small-content">
-                        {% if latest_courses_list %}
-                            <ul>
-                                {% for course in latest_courses_list %}
-                                    <li style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width: 10em;"><a href="{% url 'cmanagement:showCourseAppointments' course.id%}">{{ course.name }}</a></li>
-                                {% endfor %}
-                                <li>
-                                    <a href="{% url 'cmanagement:orgaShowAllCourses' %}" title="show all courses">show all <span class="glyphicon glyphicon-chevron-right"></span></a>
-                                </li>
-                            </ul>
-                        {%else%}
-                        <ul class="nav nav-pills nav-stacked">
-                                   <li> no courses available </li>
-                        </ul>
-                        {%endif%}
-					</div>
-				</div>
-				<div class="col-sm-10 col-md-10 col-lg-10">
-					<div id="content">
-                        {% if appointment_list %}
-                            <p><a href="{% url 'cmanagement:delCourseFormDone' course.id%}">delete course<span class="glyphicon glyphicon-trash" title="delete course"></span></a>
-                                 <wbr><a href="{% url 'cmanagement:toggleCourseVis' course.id%}">
-                                    | course visibility:
-                                    {% if course.is_visible %}
-                                        <span class="glyphicon glyphicon-eye-open" title="visible for all users, set visible for Organizer only?"></span>
-                                    {% else %}
-                                        <span class="glyphicon glyphicon-eye-close" title="visible for Organizer only, set visible for all users?"></span>
-                                    {% endif %}
-                                </a>
-                                <wbr>
-                            <p><a href="{% url 'cmanagement:showCourseCredits' course.id%}">show credit data <span class="glyphicon glyphicon-list" title="show credit data for this course"></span></a>
-                                <wbr>
-                                <a href="{% url 'cmanagement:newMEmailFormOrga' course.id %}">
 
-                                    | message whole course
-                                    <span class="glyphicon glyphicon-envelope"></span>
-                                </a>
-                            </p>
-                            <p><h2>appointments for course: {{course.name}}</h2></p>
-                            <p><a href="{% url 'cmanagement:newAppointmentForm' course.id%}">
-                                add appointment <span class="glyphicon glyphicon-plus" title="add appointment to this course"></span>
-                            </a></p>
-                            <table class="table table-striped">
-                            <tbody>
+                          {% for appl in appointment_list %}
                             <tr>
-                                <th>day</th>
-                                <th>time</th>
-                                <th>location</th>
-                                <th>tutor</th>
-                                <th>attendance</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                                <td>{{appl.weekday}}</td>
+                                <td>{{appl.lesson}}</td>
+                                <td>{{appl.location}}</td>
+                                <td>
+                                    {% if tutors_list %}
+                                    <ul>
+                                        {% for tutor in appl.my_tutors.all %}
+                                                    <li>
+                                                        <h6><a href="{% url 'cmanagement:editTutorForm' tutor.id %}" title="edit {{tutor.name_of_user}}">
+                                                            {% if tutor.is_visible %}
+                                                                {{ tutor.name_of_user }}
+                                                            {% else %}
+                                                            <span class="glyphicon glyphicon-eye-close" title="visible for Organizer only"></span>
+                                                            <wbr>{{ tutor.name_of_user }}
+                                                            {% endif %}
+                                                        </a></h6>
+                                                    </li>
+                                        {% endfor %}
+                                    </ul>
+                                    {%else%}
+                                    <ul class="nav nav-pills nav-stacked">
+                                           <li> no Tutors available </li>
+                                    </ul>
+                                    {%endif%}
+                                </td>
+                                <td>{{appl.my_participants.all.count}}/{{appl.attendance}}</td>
+                                <td><a href="{% url 'cmanagement:assignTutorForm' appl.id %}"><span class="glyphicon glyphicon-user" title="assign/remove tutor">T.</span></a></td>
+                                <td><a href="{% url 'cmanagement:showAppointmentPart' appl.id %}"><span class="glyphicon glyphicon-user" title="show/edit participants">P.</span></a></td>
+                                <td><a href="{% url 'cmanagement:editAppointmentForm' appl.id %}"><span class="glyphicon glyphicon-wrench" title="edit appointment"></span></a></td>
+                                <td><a href="{% url 'cmanagement:delAppointment' appl.id %}"><span class="glyphicon glyphicon-trash" title="delete appointment"></span></a></td>
                             </tr>
+                          {% endfor %}
+                        </tbody>
+                        </table>
 
+                    {% else %}
+                        {% if add_not_edit %}
+                            <form class="form-group" role="form" action="{% url 'cmanagement:AppointmentFormDone' course.id%}" method="post">
+                                {% csrf_token %}
 
+                                <p><a href="{% url 'cmanagement:delCourseFormDone' course.id %}">delete course<span class="glyphicon glyphicon-trash" title="delete course"></span></a>
+                                   <wbr>
+                                    <a href="{% url 'cmanagement:toggleCourseVis' course.id %}">
+                                        | course visibility:
+                                        {% if course.is_visible %}
+                                            <span class="glyphicon glyphicon-eye-open" title="visible for all users, set visible for Organizer only?"></span>
+                                        {% else %}
+                                            <span class="glyphicon glyphicon-eye-close" title="visible for Organizer only, set visible for all users?"></span>
+                                        {% endif %}
+                                    </a>
+                                </p>
+                                <h2 class="form-signin-heading">Add appointment to course "{{course.name}}"</h2>
+                                    <label class="control-label col-sm-2 sr-only" >Weekday:</label>
+                                    <div class="col-sm-10">
+                                         <select class="form-control" name="weekday" id="weekday">
+                                                <option>Monday</option>
+                                                <option>Tuesday</option>
+                                                <option>Wednesday</option>
+                                                <option>Thursday</option>
+                                                <option>Friday</option>
+                                                <option>Saturday</option>
+                                                <option>Sunday</option>
+                                         </select>
+                                    </div>
+                                    <label class="control-label col-sm-2 sr-only" >Lesson:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="lesson" id="lesson" placeholder="1.DS" required/>
+                                    </div>
 
-                              {% for appl in appointment_list %}
-                                <tr>
-                                    <td>{{appl.weekday}}</td>
-                                    <td>{{appl.lesson}}</td>
-                                    <td>{{appl.location}}</td>
-                                    <td>
-                                        {% if tutors_list %}
-                                        <ul>
-                                            {% for tutor in appl.my_tutors.all %}
-                                                        <li>
-                                                            <h6><a href="{% url 'cmanagement:editTutorForm' tutor.id %}" title="edit {{tutor.name_of_user}}">
-                                                                {% if tutor.is_visible %}
-                                                                    {{ tutor.name_of_user }}
-                                                                {% else %}
-                                                                <span class="glyphicon glyphicon-eye-close" title="visible for Organizer only"></span>
-                                                                <wbr>{{ tutor.name_of_user }}
-                                                                {% endif %}
-                                                            </a></h6>
-                                                        </li>
-                                            {% endfor %}
-                                        </ul>
-                                        {%else%}
-                                        <ul class="nav nav-pills nav-stacked">
-                                               <li> no Tutors available </li>
-                                        </ul>
-                                        {%endif%}
-                                    </td>
-                                    <td>{{appl.my_participants.all.count}}/{{appl.attendance}}</td>
-                                    <td><a href="{% url 'cmanagement:assignTutorForm' appl.id %}"><span class="glyphicon glyphicon-user" title="assign/remove tutor">T.</span></a></td>
-                                    <td><a href="{% url 'cmanagement:showAppointmentPart' appl.id %}"><span class="glyphicon glyphicon-user" title="show/edit participants">P.</span></a></td>
-                                    <td><a href="{% url 'cmanagement:editAppointmentForm' appl.id %}"><span class="glyphicon glyphicon-wrench" title="edit appointment"></span></a></td>
-                                    <td><a href="{% url 'cmanagement:delAppointment' appl.id %}"><span class="glyphicon glyphicon-trash" title="delete appointment"></span></a></td>
-                                </tr>
-                              {% endfor %}
-                            </tbody>
-                            </table>
+                                    <label class="control-label col-sm-2" >Tutor:</label>
+                                        <div class="col-sm-10">
+                                            <select class="form-control" name="tutor" id="tutor">
+                                                {% for tut in tutors_list %}
+                                                    <option>{{tut.name_of_user}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    <label class="control-label col-sm-2" >Location:</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="location" id="location" placeholder="e.g. APB 0001" required/>
+                                        </div>
+                                    <label class="control-label col-sm-2" >Attendance:</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="size" id="size" placeholder="15" pattern="[0-9]{2}" title="10<=number<=99" required/>
+                                        </div>
+                                    <label class="control-label col-sm-2" >Additional information:</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="info" id="info" placeholder="e.g. Linux, in English"/>
+                                        </div>
+                                    <div class="checkbox col-sm-10">
+                                        <label><input type="checkbox" name="enabled" id="enabled" title="if checked, only Organizers can see this">Set visible for Organizers only</label>
+                                        <p><br></p>
+                                    </div>
 
+                                    <button class="btn btn-default" type="submit">Add</button>
+                                    <a href="{% url 'cmanagement:showCourseAppointments' course.id %}">
+                                         <button class="btn btn-default cancel" type="button">Cancel</button>
+                                    </a>
+                                    <p><br></p>
+                            </form>
+                        {% elif app %}
+
+                            <form class="form-group" role="form" action="{% url 'cmanagement:editAppointmentFormDone' app.id%}" method="post">
+                                {% csrf_token %}
+                                <h2 class="form-signin-heading">Edit appointment for course "{{course.name}}"</h2>
+                                    <label class="control-label col-sm-2 sr-only" >Weekday:</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control" name="newweekday" id="newweekday">
+                                                <option>{{app.weekday}}</option>
+                                                <option>Monday</option>
+                                                <option>Tuesday</option>
+                                                <option>Wednesday</option>
+                                                <option>Thursday</option>
+                                                <option>Friday</option>
+                                                <option>Saturday</option>
+                                                <option>Sunday</option>
+                                         </select>
+                                    </div>
+                                    <label class="control-label col-sm-2 sr-only" >Lesson:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="newlesson" id="newlesson" placeholder="1.DS" value="{{app.lesson}}" required/>
+                                    </div>
+                                    <label class="control-label col-sm-2" >Location:</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="newlocation" id="newlocation" placeholder="e.g. APB 0001" value="{{app.location}}" required/>
+                                        </div>
+                                    <label class="control-label col-sm-2" >Attendance:</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="newsize" id="newsize" placeholder="15" value="{{app.attendance}}" pattern="[0-9]{2}" title="10<=number<=99" required/>
+                                        </div>
+                                    <label class="control-label col-sm-2" >Additional information:</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="newinfo" id="newinfo" placeholder="e.g. Linux, in English" value="{{app.additional_information}}" />
+                                        </div>
+                                    <div class="checkbox col-sm-10">
+
+                                        <label><input type="checkbox" name="newenabled" id="newenabled" title="if checked, only Organizers can see this">Set visible for Organizers only</label>
+                                        <p><br></p>
+                                    </div>
+
+                                    <button class="btn btn-default add" type="submit">Apply</button>
+                                    <a href="{% url 'cmanagement:showCourseAppointments' course.id %}">
+                                         <button class="btn btn-default cancel" type="button">Cancel</button>
+                                    </a>
+                                    <p><br></p>
+                            </form>
                         {% else %}
-                            {% if add_not_edit %}
-                                <form class="form-group" role="form" action="{% url 'cmanagement:AppointmentFormDone' course.id%}" method="post">
-                                    {% csrf_token %}
-
-                                    <p><a href="{% url 'cmanagement:delCourseFormDone' course.id%}">delete course<span class="glyphicon glyphicon-trash" title="delete course"></span></a>
-                                       <wbr>
-                                        <a href="{% url 'cmanagement:toggleCourseVis' course.id%}">
-                                            | course visibility:
-                                            {% if course.is_visible %}
-                                                <span class="glyphicon glyphicon-eye-open" title="visible for all users, set visible for Organizer only?"></span>
-                                            {% else %}
-                                                <span class="glyphicon glyphicon-eye-close" title="visible for Organizer only, set visible for all users?"></span>
-                                            {% endif %}
-                                        </a>
-                                    </p>
-                                    <h2 class="form-signin-heading">Add appointment to course "{{course.name}}"</h2>
-                                        <label class="control-label col-sm-2 sr-only" >Weekday:</label>
-                                        <div class="col-sm-10">
-                                             <select class="form-control" name="weekday" id="weekday">
-                                                    <option>Monday</option>
-                                                    <option>Tuesday</option>
-                                                    <option>Wednesday</option>
-                                                    <option>Thursday</option>
-                                                    <option>Friday</option>
-                                                    <option>Saturday</option>
-                                                    <option>Sunday</option>
-                                             </select>
-                                        </div>
-                                        <label class="control-label col-sm-2 sr-only" >Lesson:</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" name="lesson" id="lesson" placeholder="1.DS" required/>
-                                        </div>
-
-                                        <label class="control-label col-sm-2" >Tutor:</label>
-                                            <div class="col-sm-10">
-                                                <select class="form-control" name="tutor" id="tutor">
-                                                    {% for tut in tutors_list %}
-                                                        <option>{{tut.name_of_user}}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                        <label class="control-label col-sm-2" >Location:</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" name="location" id="location" placeholder="e.g. APB 0001" required/>
-                                            </div>
-                                        <label class="control-label col-sm-2" >Attendance:</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" name="size" id="size" placeholder="15" pattern="[0-9]{2}" title="10<=number<=99" required/>
-                                            </div>
-                                        <label class="control-label col-sm-2" >Additional information:</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" name="info" id="info" placeholder="e.g. Linux, in English"/>
-                                            </div>
-                                        <div class="checkbox col-sm-10">
-                                            <label><input type="checkbox" name="enabled" id="enabled" title="if checked, only Organizers can see this">Set visible for Organizers only</label>
-                                            <p><br></p>
-                                        </div>
-
-                                        <button class="btn btn-default" type="submit">Add</button>
-                                        <a href="{% url 'cmanagement:showCourseAppointments' course.id %}">
-                                             <button class="btn btn-default cancel" type="button">Cancel</button>
-                                        </a>
-                                        <p><br></p>
-                                </form>
-                            {% elif app %}
-
-                                <form class="form-group" role="form" action="{% url 'cmanagement:editAppointmentFormDone' app.id%}" method="post">
-                                    {% csrf_token %}
-                                    <h2 class="form-signin-heading">Edit appointment for course "{{course.name}}"</h2>
-                                        <label class="control-label col-sm-2 sr-only" >Weekday:</label>
-                                        <div class="col-sm-10">
-                                            <select class="form-control" name="newweekday" id="newweekday">
-                                                    <option>{{app.weekday}}</option>
-                                                    <option>Monday</option>
-                                                    <option>Tuesday</option>
-                                                    <option>Wednesday</option>
-                                                    <option>Thursday</option>
-                                                    <option>Friday</option>
-                                                    <option>Saturday</option>
-                                                    <option>Sunday</option>
-                                             </select>
-                                        </div>
-                                        <label class="control-label col-sm-2 sr-only" >Lesson:</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" name="newlesson" id="newlesson" placeholder="1.DS" value="{{app.lesson}}" required/>
-                                        </div>
-                                        <label class="control-label col-sm-2" >Location:</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" name="newlocation" id="newlocation" placeholder="e.g. APB 0001" value="{{app.location}}" required/>
-                                            </div>
-                                        <label class="control-label col-sm-2" >Attendance:</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" name="newsize" id="newsize" placeholder="15" value="{{app.attendance}}" pattern="[0-9]{2}" title="10<=number<=99" required/>
-                                            </div>
-                                        <label class="control-label col-sm-2" >Additional information:</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" name="newinfo" id="newinfo" placeholder="e.g. Linux, in English" value="{{app.additional_information}}" />
-                                            </div>
-                                        <div class="checkbox col-sm-10">
-
-                                            <label><input type="checkbox" name="newenabled" id="newenabled" title="if checked, only Organizers can see this">Set visible for Organizers only</label>
-                                            <p><br></p>
-                                        </div>
-
-                                        <button class="btn btn-default add" type="submit">Apply</button>
-                                        <a href="{% url 'cmanagement:showCourseAppointments' course.id %}">
-                                             <button class="btn btn-default cancel" type="button">Cancel</button>
-                                        </a>
-                                        <p><br></p>
-                                </form>
-                            {% else %}
-                                <p> nothing to show </p>
-                            {% endif %}
+                            <p> nothing to show </p>
                         {% endif %}
+                    {% endif %}
+                </div>
+            </section>
 
-					</div>		
-				</div>	
-			</div>				
+            <footer class="navbar navbar-fixed-bottom" role="navigation">
+                <a href="https://twitter.com/@ifsr"><img src="{{ STATIC_URL }}img/twitter-wrap.png" width="30px" height="30px" alt="Twitter Logo"></a>
+                <a href="https://www.facebook.com/iFSR.de"><img src="{{ STATIC_URL }}img/facebook-wrap.png" width="30px" height="30px" alt="Facebook Logo"></a>
+            </footer>
+        </div>
 
-			<div class="row">
-				<div class="col-sm-2 col-md-2 col-lg-2">	
-					<div class="small-head">
-						<small>Tutors </small>
-                        <div class="editTutor">
-                                <a href="{% url 'cmanagement:addTutorForm' %}">add</a>
-                        </div>
-					</div>
-				</div>
-			</div>
-			
-			<div class="row">
-				<div class="col-sm-2 col-md-2 col-lg-2">
-					<div class="small-content">
-
-           		<!-- list of tutors e.g.:
-           		<li><a href="message.html">Fredo Erxleben</a></a></li>
-           		-->
-                      {% if tutors_list %}
-                        <ul>
-                            {% for tutor in tutors_list %}
-                                <li><a href="{% url 'cmanagement:editTutorForm' tutor.id%}">{{ tutor.name_of_user }}</a> <a href="{% url 'cmanagement:newEmailFormOrga' tutor.id %}"><span class="glyphicon glyphicon-envelope" title="message tutor"></span></a></li>
-                            {% endfor %}
-                            <li>
-                                <a href="{% url 'cmanagement:orgaShowAllTutors' %}" title="show all tutors">show all <span class="glyphicon glyphicon-chevron-right"></span></a>
-                            </li>
-                        </ul>
-                      {%else%}
-                        <ul class="nav nav-pills nav-stacked">
-                               <li> no Tutors available </li>
-                        </ul>
-                      {%endif%}
-					</div>
-				</div>	
-			</div>
-
-			<!-- footer -->
-			<div class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
-				<div class="container">
-	 				<a href="https://twitter.com/@ifsr"><img src="{{ STATIC_URL }}img/twitter-wrap.png" width="30px" height="30px" alt="Twitter Logo"></a>
-	 				<a href="https://www.facebook.com/iFSR.de"><img src="{{ STATIC_URL }}img/facebook-wrap.png" width="30px" height="30px" alt="Facebook Logo"></a>
-
-	 			</div>
-			</div>
-				
-		</div>	
-
-  	<!-- jQuery (needed for Bootstrap JavaScript-Plugins) -->
-  	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-		<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-  	<script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
-		
-	</body>
-
+        <!-- jQuery (needed for Bootstrap JavaScript-Plugins) -->
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+        <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
+    </body>
 </html>
