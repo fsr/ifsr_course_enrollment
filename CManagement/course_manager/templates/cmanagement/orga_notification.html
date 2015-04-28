@@ -31,7 +31,7 @@
                 <div class="box">
                     {% if latest_courses_list %}
                         {% for course in latest_courses_list %}
-                            <a href="{% url 'cmanagement:showAppointments' course.id %}">{{ course.name }}</a>
+                            <a href="{% url 'cmanagement:showCourseAppointments' course.id %}">{{ course.name }}</a>
                         {% endfor %}
                         <a href="{% url 'cmanagement:orgaShowAllCourses' %}" title="show all courses">show all <span class="glyphicon glyphicon-chevron-right"></span></a>
                     {%else%}
