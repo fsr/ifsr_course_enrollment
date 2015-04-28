@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-    <meta charset="utf-8">
+        <meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>IFSR Course Management | Enrollment</title>
@@ -17,99 +17,71 @@
 		<link href="{{ STATIC_URL }}css/custom.css" rel="stylesheet">
 		<!-- java script -->
 		<!-- notification window after enrollment -->
-
 		<noscript><p><br>Your browser currently does not support JavaScript! Please activate JavaScript to use this site properly.</p></noscript>
-  </head>
+    </head>
+    <body>
+        <div class = "container">
+            <header id="mainHeader">
+                <a class="headline" href="{% url 'cmanagement:index' %}">IFSR course enrollment</a>
+                <a href ="https://www.ifsr.de/start"><img src="{{ STATIC_URL }}img/fsrlogo.png"></a>
+            </header>
 
-		<body>
-
-		<div class = "container">
-
-			<div class="row">
-				<div class="col-sm-6 col-md-6 col-lg-6">
-					<h1><a href="{% url 'cmanagement:index' %}">IFSR course enrollment</a></h1>
-				</div>
-				<div class="col-sm-6 col-md-6 col-lg-6">
-					<a href ="https://www.ifsr.de/start"><img src="{{ STATIC_URL }}img/fsrlogo.png" width="100px" height="100px"></a>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-sm-2 col-md-2 col-lg-2">
-					<div class="small-head">
-						<small>Courses</small>
-					</div>
-				</div>
-				<div class="col-sm-10 col-md-10 col-lg-10">
-					<div id="content-head">
-					    <div class="backButton">
-							<a href="{% url 'cmanagement:index'%}" ><span class="glyphicon glyphicon-chevron-left" title="back"></span></a>
-						</div>
-					</div>
-				</div>
-			</div>
+            <nav class="col-xs-12 col-md-2">
+                <header class="subHeader">Courses</header>
+                <div class="box">
+                    {% if latest_courses_list %}
+                        {% for course in latest_courses_list %}
+                            <a href="{% url 'cmanagement:showAppointments' course.id %}">{{ course.name }}</a>
+                        {% endfor %}
+                    {%else%}
+                        no courses available
+                    {%endif%}
+                </div>
+            </nav>
 
 			<!-- course list -->
-			<div class="row">
-				<div class="col-sm-2 col-md-2 col-lg-2">
-					<div class="small-content">
+			<section class="col-xs-12 col-md-10">
+                <header class="subHeader">
+                    <a href="/kurse/faq/">Questions?</a>
+                    <a href="{% url 'cmanagement:teamcredits' %}">Team</a>
+                    <a href="{% url 'cmanagement:index'%}" ><span class="glyphicon glyphicon-chevron-left" title="back"></span></a>
+                </header>
+                <div class="box">
 
-                        {% if latest_courses_list %}
-                            <ul>
-                                {% for course in latest_courses_list %}
-                                    <li style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width: 10em;"><a href="{% url 'cmanagement:showAppointments' course.id %}">{{ course.name }}</a></li>
-                                {% endfor %}
-                            </ul>
-                        {%else%}
-                        <ul class="nav nav-pills nav-stacked">
-                                       <li> no courses available </li>
-                        </ul>
-                        {%endif%}
-                    </div>
-                </div>
-                <div class="col-sm-10 col-md-10 col-lg-10">
-					<div id="content">
-
-                        <h1> Development Team </h1><br>
-                        <h4>lead programmer:</h4>
-                        <p><span class="glyphicon glyphicon-bullhorn" title="It's time to kick ass and chew bubblegum, and I'm all out of gum!"></span>
-                        Dennis Koppenhagen
-                        </p>
-                        <br>
-                        <h4>deputy lead programmer:</h4>
-                        <p><span class="glyphicon glyphicon-compressed" title="Roses are red, violets are blue, this is our program especially for you!"></span>
-                        Daniel Schneegast
-                        </p><br>
-                        <h4>secretary (best boy):</h4>
-                        <p><span class="glyphicon glyphicon-glass" title="I have no idea what I am doing."></span>
-                        Stephan Porsche
-                        </p><br>
-                        <h4>lead tester:</h4>
-                        <p><span class="glyphicon glyphicon-flash" title="Oh yeah, why not send the chinese guy to do the job?"></span>
-                        Zhenxi Zhao
-                        </p><br>
-                        <h4>tester:</h4>
-                        <p><span class="glyphicon glyphicon-star-empty" title="sparkle, sparkle little star..."></span>
-                        Martin Eisoldt
-                        </p><br>
-                        <h4>background artist:</h4>
-                        <p><span class="glyphicon glyphicon-shopping-cart" title="- place some silly statement here -"></span>
-                        Sandro Jablonski
-                        </p><br>
-
-		 	 		</div>
+                    <h1> Development Team </h1><br>
+                    <h4>lead programmer:</h4>
+                    <p><span class="glyphicon glyphicon-bullhorn" title="It's time to kick ass and chew bubblegum, and I'm all out of gum!"></span>
+                    Dennis Koppenhagen
+                    </p>
+                    <br>
+                    <h4>deputy lead programmer:</h4>
+                    <p><span class="glyphicon glyphicon-compressed" title="Roses are red, violets are blue, this is our program especially for you!"></span>
+                    Daniel Schneegast
+                    </p><br>
+                    <h4>secretary (best boy):</h4>
+                    <p><span class="glyphicon glyphicon-glass" title="I have no idea what I am doing."></span>
+                    Stephan Porsche
+                    </p><br>
+                    <h4>lead tester:</h4>
+                    <p><span class="glyphicon glyphicon-flash" title="Oh yeah, why not send the chinese guy to do the job?"></span>
+                    Zhenxi Zhao
+                    </p><br>
+                    <h4>tester:</h4>
+                    <p><span class="glyphicon glyphicon-star-empty" title="sparkle, sparkle little star..."></span>
+                    Martin Eisoldt
+                    </p><br>
+                    <h4>background artist:</h4>
+                    <p><span class="glyphicon glyphicon-shopping-cart" title="- place some silly statement here -"></span>
+                    Sandro Jablonski
+                    </p><br>
 				</div>
-            </div>
-	  	</div>
-	  	
-	  	<!-- footer -->
-	  	<div class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
-				<div class="container">
-	 				<a href="https://twitter.com/@ifsr"><img src="{{ STATIC_URL }}img/twitter-wrap.png" width="30px" height="30px" alt="Twitter Logo"></a>
-	 				<a href="https://www.facebook.com/iFSR.de"><img src="{{ STATIC_URL }}img/facebook-wrap.png" width="30px" height="30px" alt="Facebook Logo"></a>
+            </section>
 
-	 			</div>
-			</div>
+            <footer class="navbar navbar-fixed-bottom" role="navigation">
+                <a href="https://twitter.com/@ifsr"><img src="{{ STATIC_URL }}img/twitter-wrap.png" width="30px" height="30px" alt="Twitter Logo"></a>
+                <a href="https://www.facebook.com/iFSR.de"><img src="{{ STATIC_URL }}img/facebook-wrap.png" width="30px" height="30px" alt="Facebook Logo"></a>
+            </footer>
+	  	</div>
 
 
 
