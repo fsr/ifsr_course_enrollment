@@ -4,7 +4,7 @@
     <meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>IFSR Course Management | edit tutor</title>
+		<title>IFSR Course Management | Enrollment</title>
 		<meta name="description" content="Course Enrollment of the IFSR TU Dresden. Software Technology Group, TU Dresden, 2014/2015">
 		<meta name="author" content="SWT10/14">
 		<!-- Normalize CSS v1.1.0 | MIT License | http://www.git.io/normalize -->
@@ -17,176 +17,108 @@
 		<link href="{{ STATIC_URL }}css/custom.css" rel="stylesheet">
 		<!-- java script -->
 		<!-- notification window after enrollment -->
-
 		<noscript><p><br>Your browser currently does not support JavaScript! Please activate JavaScript to use this site properly.</p></noscript>
-  </head>
+    </head>
+    <body>
+        <div class="container">
+            <header id="mainHeader">
+                <a class="headline" href="{% url 'cmanagement:exec' %}">IFSR course enrollment</a>
+                <a href ="https://www.ifsr.de/start"><img src="{{ STATIC_URL }}img/fsrlogo.png"></a>
+            </header>
 
-		<body>
-
-		<div class = "container">
-
-			<div class="row">
-				<div class="col-sm-6 col-md-6 col-lg-6">
-					<h1><a href="{% url 'cmanagement:exec' %}">IFSR course enrollment</a></h1>
-				</div>
-                <div class="col-sm-1 col-md-1 col-lg-1">
-					<div class="edit">
-						<a href="{% url 'cmanagement:resetPW' %}">Reset password</a>
-					</div>
-				</div>
-				<div class="col-sm-4 col-md-4 col-lg-4">
-					<a href ="https://www.ifsr.de/start"><img src="{{ STATIC_URL }}img/fsrlogo.png" width="100px" height="100px"></a>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-sm-2 col-md-2 col-lg-2">
-					<div class="small-head">
-						<small>Courses </small>
-                        <div class="editCourse">
-                                <a href="{% url 'cmanagement:addCourseForm' %}">add</a>
-                        </div>
-					</div>
-				</div>
-
-				<div class="col-sm-10 col-md-10 col-lg-10">
-					<div id="content-head">
-
-						<div class="logoutButton">
-							<a href="{% url 'cmanagement:Logout' %}">Logout</a>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="row">
-
-				<div class="col-sm-2 col-md-2 col-lg-2">
-					<div class="small-content">
-
+            <nav class="col-xs-12 col-md-2">
+                <header class="subHeader">Courses<a href="{% url 'cmanagement:addCourseForm' %}">add</a></header>
+                <div class="box">
                     {% if latest_courses_list %}
-                        <ul>
-                            {% for course in latest_courses_list %}
-                                <li style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width: 10em;"><a href="{% url 'cmanagement:showCourseAppointments' course.id%}">{{ course.name }}</a></li>
-                            {% endfor %}
-                            <li>
-                                <a href="{% url 'cmanagement:orgaShowAllCourses' %}" title="show all courses">show all <span class="glyphicon glyphicon-chevron-right"></span></a>
-                            </li>
-                        </ul>
+                        {% for course in latest_courses_list %}
+                            <a href="{% url 'cmanagement:showAppointments' course.id %}">{{ course.name }}</a>
+                        {% endfor %}
                     {%else%}
-                        <ul class="nav nav-pills nav-stacked">
-                               <li> no courses available </li>
-                        </ul>
+                        no courses available
                     {%endif%}
+                </div>
 
-					</div>
-				</div>
-				<div class="col-sm-10 col-md-10 col-lg-10">
-					<div id="content">
-                        <!--- show edit or creation form--->
-                        {% if edit_not_create %}
-						<form class="form-group" role="form" action="{% url 'cmanagement:editTutorFormDone' tutor.id%}" method="post">
+                <header class="subHeader">Tutors<a href="{% url 'cmanagement:addTutorForm' %}">add</a></header>
+                <div class="box">
+                    {% if tutors_list %}
+                        {% for tutor in tutors_list %}
+                            <a href="{% url 'cmanagement:editTutorForm' tutor.id%}">{{ tutor.name_of_user }}</a> <a href="{% url 'cmanagement:newEmailFormOrga' tutor.id %}"><span class="glyphicon glyphicon-envelope" title="message tutor"></span></a>
+                        {% endfor %}
+                            <a href="{% url 'cmanagement:orgaShowAllTutors' %}" title="show all tutors">show all <span class="glyphicon glyphicon-chevron-right"></span></a>
+                    {%else%}
+                        no Tutors available
+                    {%endif%}
+                </div>
+            </nav>
+
+            <section class="col-xs-12 col-md-10">
+                <header class="subHeader">
+                    <a href="/kurse/faq/">Questions?</a>
+                    <a href="{% url 'cmanagement:teamcredits' %}">Team</a>
+                    <a href="{% url 'cmanagement:resetPW' %}">Reset Password</a>
+                    <a href="{% url 'cmanagement:Logout' %}">Logout</a>
+                    <a href="{% url 'cmanagement:exec' %}" ><span class="glyphicon glyphicon-chevron-left" title="back"></span></a>
+                </header>
+                <div class="box">
+                    <!--- show edit or creation form--->
+                    {% if edit_not_create %}
+                        <form class="form-group" role="form" action="{% url 'cmanagement:editTutorFormDone' tutor.id%}" method="post">
                             {% csrf_token %}
-							<h2 class="form-signin-heading">Edit tutor "{{tutor.name_of_user}}"</h2>
+                            <h2 class="form-signin-heading">Edit tutor "{{tutor.name_of_user}}"</h2>
                             <p><a href="{% url 'cmanagement:delTutorFormDone' tutor.id%}"> delete tutor <span class="glyphicon glyphicon-remove" title="delete tutor"></span></a></p>
-					   			<label class="control-label col-sm-2" >Name:</label>
-					   				<div class="col-sm-10">
-					   					<input type="text" class="form-control" name="name" id="name" placeholder="First name and surname" value="{{tutor.name_of_user}}" required/>
-					   				</div>
-					   			<label class="control-label col-sm-2" >Email address:</label>
-					   				<div class="col-sm-10">
-					   					<input type="email" class="form-control" name="email" id="email" placeholder="name.surname@mail.zih.tu-dresden.de" value="{{tutor.email}}" required/>
-					   				</div>
-					   			<div class="checkbox col-sm-10">
-    								<label><input type="checkbox" name="enabled" id="enabled" title="if checked, only Organizers can see this tutor">Set visibility to Organizers only</label>
-  								</div>
-									<button class="btn btn-default add" type="submit">Apply</button>
-									<a href="{% url 'cmanagement:exec' %}">
-                                         <button class="btn btn-default cancel" type="button">Cancel</button>
-                                    </a>
-									<p><br></p>
-
-						</form>
-                         {% else %}
-                            <form class="form-group" role="form" action="{% url 'cmanagement:addTutorFormDone' %}" method="post">
+                            <label class="control-label col-sm-2" >Name:</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="name" id="name" placeholder="First name and surname" value="{{tutor.name_of_user}}" required/>
+                                </div>
+                            <label class="control-label col-sm-2" >Email address:</label>
+                                <div class="col-sm-10">
+                                    <input type="email" class="form-control" name="email" id="email" placeholder="name.surname@mail.zih.tu-dresden.de" value="{{tutor.email}}" required/>
+                                </div>
+                            <div class="checkbox col-sm-10">
+                                <label><input type="checkbox" name="enabled" id="enabled" title="if checked, only Organizers can see this tutor">Set visibility to Organizers only</label>
+                            </div>
+                            <button class="btn btn-default add" type="submit">Apply</button>
+                            <a href="{% url 'cmanagement:exec' %}">
+                                 <button class="btn btn-default cancel" type="button">Cancel</button>
+                            </a>
+                        </form>
+                    {% else %}
+                        <form class="form-group" role="form" action="{% url 'cmanagement:addTutorFormDone' %}" method="post">
                             {% csrf_token %}
-							<h2 class="form-signin-heading">add new tutor</h2>
-					   			<label class="control-label col-sm-2" >Name:</label>
-					   				<div class="col-sm-10">
-					   					<input type="text" class="form-control" name="newname" id="newname" placeholder="First name and surname" required/>
-					   				</div>
-					   			<label class="control-label col-sm-2" >Email address:</label>
-					   				<div class="col-sm-10">
-					   					<input type="email" class="form-control" name="newemail" id="newemail" placeholder="sXXXXXX@tu-dresden.de" required/>
-					   				</div>
-                                <label class="control-label col-sm-2" >s-number:</label>
-					   				<div class="col-sm-10">
-					   					<input type="text" class="form-control" name="snumber" id="snumber" placeholder="s1234567" pattern="[s]{1}[0-9]{7}" required/>
-					   				</div>
-					   			<div class="checkbox col-sm-10">
-    								<label><input type="checkbox" name="enabled" id="newenabled" title="if checked, only Organizers can see this tutor">Set visibility to Organizers only</label>
-  								</div>
-									<button class="btn btn-default add" type="submit">Apply</button>
-                                    <a href="{% url 'cmanagement:exec' %}">
-                                         <button class="btn btn-default cancel" type="button">Cancel</button>
-                                    </a>
-									<p><br></p>
+                            <h2 class="form-signin-heading">add new tutor</h2>
+                            <label class="control-label col-sm-2" >Name:</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="newname" id="newname" placeholder="First name and surname" required/>
+                                </div>
+                            <label class="control-label col-sm-2" >Email address:</label>
+                                <div class="col-sm-10">
+                                    <input type="email" class="form-control" name="newemail" id="newemail" placeholder="sXXXXXX@tu-dresden.de" required/>
+                                </div>
+                            <label class="control-label col-sm-2" >s-number:</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="snumber" id="snumber" placeholder="s1234567" pattern="[s]{1}[0-9]{7}" required/>
+                                </div>
+                            <div class="checkbox col-sm-10">
+                                <label><input type="checkbox" name="enabled" id="newenabled" title="if checked, only Organizers can see this tutor">Set visibility to Organizers only</label>
+                            </div>
+                            <button class="btn btn-default add" type="submit">Apply</button>
+                            <a href="{% url 'cmanagement:exec' %}">
+                                 <button class="btn btn-default cancel" type="button">Cancel</button>
+                            </a>
+                        </form>
+                    {% endif %}
+                </div>
+            </section>
 
-						</form>
-                         {% endif %}
-					</div>		
-				</div>	
-			</div>				
+            <footer class="navbar navbar-fixed-bottom" role="navigation">
+                <a href="https://twitter.com/@ifsr"><img src="{{ STATIC_URL }}img/twitter-wrap.png" width="30px" height="30px" alt="Twitter Logo"></a>
+                <a href="https://www.facebook.com/iFSR.de"><img src="{{ STATIC_URL }}img/facebook-wrap.png" width="30px" height="30px" alt="Facebook Logo"></a>
+            </footer>
+        </div>
 
-			<div class="row">
-				<div class="col-sm-2 col-md-2 col-lg-2">	
-					<div class="small-head">
-						<small>Tutors </small>
-                        <div class="editTutor">
-                                <a href="{% url 'cmanagement:addTutorForm' %}">add</a>
-                        </div>
-					</div>
-				</div>
-			</div>
-			
-			<div class="row">
-				<div class="col-sm-2 col-md-2 col-lg-2">
-					<div class="small-content">
-
-          	        {% if tutors_list %}
-                        <ul>
-                            {% for tutor in tutors_list %}
-                                <li><a href="{% url 'cmanagement:editTutorForm' tutor.id%}">{{ tutor.name_of_user }}</a> <a href="{% url 'cmanagement:newEmailFormOrga' tutor.id %}"><span class="glyphicon glyphicon-envelope" title="message tutor"></span></a></li>
-                            {% endfor %}
-                            <li>
-                                <a href="{% url 'cmanagement:orgaShowAllTutors' %}" title="show all tutors">show all <span class="glyphicon glyphicon-chevron-right"></span></a>
-                            </li>
-                        </ul>
-                    {%else%}
-                        <ul class="nav nav-pills nav-stacked">
-                               <li> no Tutors available </li>
-                        </ul>
-                    {%endif%}
-					</div>
-				</div>	
-			</div>
-
-			<!-- footer -->
-			<div class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
-				<div class="container">
-	 				<a href="https://twitter.com/@ifsr"><img src="{{ STATIC_URL }}img/twitter-wrap.png" width="30px" height="30px" alt="Twitter Logo"></a>
-	 				<a href="https://www.facebook.com/iFSR.de"><img src="{{ STATIC_URL }}img/facebook-wrap.png" width="30px" height="30px" alt="Facebook Logo"></a>
-
-	 			</div>
-			</div>
-				
-		</div>	
-
-  	<!-- jQuery (needed for Bootstrap JavaScript-Plugins) -->
-  	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-		<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-  	<script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
-		
-	</body>
-
+        <!-- jQuery (needed for Bootstrap JavaScript-Plugins) -->
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+        <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
+    </body>
 </html>
