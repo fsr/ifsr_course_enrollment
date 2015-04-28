@@ -42,7 +42,9 @@
                 <div class="box">
                     {% if tutors_list %}
                         {% for tutor in tutors_list %}
-                            {{ tutor.name_of_user }}<a href="{% url 'cmanagement:newEmailFormTut' tutor.id %}"><span class="glyphicon glyphicon-envelope" title="message tutor"></span></a>
+                            <span>
+                                {{ tutor.name_of_user }} <a href="{% url 'cmanagement:newEmailFormTut' tutor.id %}"><span class="glyphicon glyphicon-envelope" title="message tutor"></span></a>
+                            </span>
                         {% endfor %}
                     {%else%}
                         no Tutors available

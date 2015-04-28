@@ -43,7 +43,9 @@
                 <div class="box">
                     {% if tutors_list %}
                         {% for tutor in tutors_list %}
-                            <a href="{% url 'cmanagement:editTutorForm' tutor.id%}">{{ tutor.name_of_user }}</a> <a href="{% url 'cmanagement:newEmailFormOrga' tutor.id %}"><span class="glyphicon glyphicon-envelope" title="message tutor"></span></a>
+                            <span>
+                                <a href="{% url 'cmanagement:editTutorForm' tutor.id%}">{{ tutor.name_of_user }}</a> <a href="{% url 'cmanagement:newEmailFormOrga' tutor.id %}"><span class="glyphicon glyphicon-envelope" title="message tutor"></span></a>
+                            </span>
                         {% endfor %}
                         <a href="{% url 'cmanagement:orgaShowAllTutors' %}" title="show all tutors">show all <span class="glyphicon glyphicon-chevron-right"></span></a>
                     {%else%}
