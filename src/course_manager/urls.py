@@ -14,6 +14,8 @@ urlpatterns = patterns('',
     url(r'^notemailsuccpart/$', View_Participants.show_notification_email_success, name='noteMailSuccPart'),
     url(r'^notetimeoutpart/$', View_Participants.show_notification_timeout, name='noteTimeoutPart'),
     url(r'^whoReadsThis/$', View_Participants.show_awesome_guys, name='teamcredits'),
+    url(r'^faq/$', View_Participants.show_faq, name='faq'),
+
 
     # Organizers' View:
     url(r'^exec/$', View_Organizer.executives_index, name='exec'),

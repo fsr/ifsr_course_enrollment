@@ -534,3 +534,11 @@ def show_awesome_guys(request):
     context = {'latest_courses_list': latest_courses_list}
 
     return render(request, 'cmanagement/awesome_credits.html', context)
+
+def show_faq(request):
+
+    latest_courses_list = get_latest_courses_list()
+
+    context = {'latest_courses_list': latest_courses_list}
+
+    return render(request, 'cmanagement/faq.html', context)
