@@ -9,6 +9,7 @@ urlpatterns = patterns('',
                        url(r'^admin/', include(admin.site.urls)),
                        url(r'^$', View_Participants.index, name='index'),
                        url(r'^index/$', View_Participants.index, name='index'),
-                       url(r'^__debug__/', include(debug_toolbar.urls)),
+                       # uncomment for debug output
+                       # url(r'^__debug__/', include(debug_toolbar.urls)),
                        url(r'^', include('course_manager.urls', namespace="cmanagement")),
                        )

@@ -15,7 +15,7 @@ SECRET_KEY = '*yk(vef1+*7)$576_#t@pan1!gugq5eo+++%&4=*qou_7%(ljr'
 
 # TODO: Turn off Debug mode
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 TEMPLATE_DEBUG = False
 
