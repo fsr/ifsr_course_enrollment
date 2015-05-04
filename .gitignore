@@ -56,5 +56,8 @@ target/
 # Databases
 *.sqlite3
 
+# Config Files
+src/cm_config/settings.py
+
 # Project files
 .idea/
