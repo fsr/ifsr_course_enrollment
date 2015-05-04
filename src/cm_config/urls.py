@@ -2,7 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from course_manager.views import View_Participants
 
-import debug_toolbar
+#import debug_toolbar
 
 admin.autodiscover()
 urlpatterns = patterns('',
