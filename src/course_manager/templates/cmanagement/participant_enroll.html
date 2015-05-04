@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>IFSR Course Management | Enrollment</title>
+		<meta name="description" content="Course Enrollment of the IFSR TU Dresden. Software Technology Group, TU Dresden, 2014/2015">
+		<meta name="author" content="SWT10/14">
+		<!-- Normalize CSS v1.1.0 | MIT License | http://www.git.io/normalize -->
+		<link href="{{ STATIC_URL }}css/normalize.css" rel="stylesheet">
+		<!-- Google Fonts http://www.google.com/fonts -->
+		<link href='http://fonts.googleapis.com/css?family=Oxygen:400,300|Oswald|Roboto+Condensed:300italic,400,300' rel='stylesheet' type='text/css'>
+		<!-- Bootstrap CSS http://getbootstrap.com -->
+		<link href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<!-- Custom CSS -->
+		<link href="{{ STATIC_URL }}css/custom.css" rel="stylesheet">
+		<!-- java script -->
+		<!-- notification window after enrollment -->
+		<noscript><p><br>Your browser currently does not support JavaScript! Please activate JavaScript to use this site properly.</p></noscript>
+    </head>
+    <body>
+        <div class="container">
+            <header id="mainHeader">
+                <a class="headline" href="{% url 'cmanagement:index' %}">IFSR course enrollment</a>
+                <a href ="https://www.ifsr.de/start"><img src="{{ STATIC_URL }}img/fsrlogo.png"></a>
+            </header>
+
+            <nav class="col-xs-12 col-md-2">
+                <header class="subHeader">Courses</header>
+                <div class="box">
+                    {% if latest_courses_list %}
+                        {% for course in latest_courses_list %}
+                            <a href="{% url 'cmanagement:showAppointments' course.id %}">{{ course.name }}</a>
+                        {% endfor %}
+                    {%else%}
+                        no courses available
+                    {%endif%}
+                </div>
+            </nav>
+
+            <section class="col-xs-12 col-md-10">
+                <header class="subHeader">
+                    <a href="/kurse/faq/">Questions?</a>
+                    <a href="{% url 'cmanagement:teamcredits' %}">Team</a>
+                    <a href="{% url 'cmanagement:showAppointments' selected_appointment.my_course.id %}" ><span class="glyphicon glyphicon-chevron-left" title="back"></span></a>
+                </header>
+                <div class="box">
+                    {% if no_certification_selected %}
+                        <form class="form-horizontal" role="form" action="{% url 'cmanagement:proc_enroll' selected_appointment.id %}" method="post">
+                            <div class="form-group">
+                                {% csrf_token %}
+                                <h1> {{selected_appointment.my_course.name}}, on {{selected_appointment.weekday}}/{{selected_appointment.lesson}} at {{selected_appointment.location}} </h1>
+                                <label class="control-label col-sm-2" for="sNumber">sNumber:</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="snumber" id="snumber" pattern="[s]{1}[0-9]{7}" placeholder="s1234567" required autofocus>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Name:</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="nameInput" id="nameInput" placeholder="First name and surname" required>
+                                </div>
+                            </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">Credit (ungraded):</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" name="credit_dropdown" id="credit_dropdown">
+                                        <option value="c0">none</option>
+                                        <option value="c1">AQUA</option>
+                                        <option value="c3">extracurricular studies (studium generale)</option>
+                                        </select>
+                                    </div>
+                        </div>
+                        <div class="form-group">
+                                <label class="control-label col-sm-2" for="faculty">Faculty:</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control" name="faculty_dropdown" id="faculty_dropdown">
+                                            <option value="f0">none</option>
+                                            <option value="f1">Faculty of Science&#42;</option>
+                                            <option value="f2">Faculty of Education</option>
+                                            <option value="f3">Faculty of Law</option>
+                                            <option value="f4">Faculty of Arts, Humanities and Social Science</option>
+                                            <option value="f5">Faculty of Linguistics, Literature and Cultural Studies</option>
+                                            <option value="f6">Faculty of Business and Economics</option>
+                                            <option value="f7">Faculty of Electrical and Computer Engineering</option>
+                                            <option value="f8">Faculty of Computer Science</option>
+                                            <option value="f9">Faculty of Mechanical Science and Engineering</option>
+                                            <option value="f10">Faculty of Architecture</option>
+                                            <option value="f11">Faculty of Civil Engineering</option>
+                                            <option value="f12">Faculty of Environmental Sciences</option>
+                                            <option value="f13">Faculty of Transportation and Traffic Science</option>
+                                            <option value="f14">Faculty of Medicine Carl Gustav Carus</option>
+                                        </select>
+                                        <h6>&#42;comprising the departments Biology, Chemistry, Mathematics, Physics and Psychology<br></h6>
+                                    </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2"></label>
+                                <div class="col-sm-10">
+                                    <p>
+
+                                    </p> <!-- space between lines -->
+                                <button  class="btn btn-default" type="submit">Submit</button>
+                                <!--
+                            <button type="submit" class="btn btn-default" onclick="window.location.href="https://www.ifsr.de/start"">Submit</button>
+                            -->
+                            <span class="help-block">After submitting your data you will receive an email with a confirmation link.</span>
+                            </div>
+                        </div>
+                        </form>
+                    {% else %}
+                        <form class="form-signin" role="form" action="{% url 'cmanagement:proc_enroll' selected_appointment.id %}" method="post">
+                        {% csrf_token %}
+                        <h1> {{selected_appointment.my_course.name}}, on {{selected_appointment.weekday}}/{{selected_appointment.lesson}} at {{selected_appointment.location}} </h1>
+                        <h2 class="form-signin-heading">Please enter the name of your faculty for certification</h2>
+                        <label class="sr-only">faculty:</label>
+                        <input type="text" name="faculty" id="faculty" class="form-control" placeholder="computer science" required autofocus>
+
+                        <button class="btn btn-default" type="submit">complete enrollment</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </section>
+
+            <footer class="navbar navbar-fixed-bottom" role="navigation">
+                <a href="https://twitter.com/@ifsr"><img src="{{ STATIC_URL }}img/twitter-wrap.png" width="30px" height="30px" alt="Twitter Logo"></a>
+                <a href="https://www.facebook.com/iFSR.de"><img src="{{ STATIC_URL }}img/facebook-wrap.png" width="30px" height="30px" alt="Facebook Logo"></a>
+            </footer>
+        </div>
+
+        <!-- jQuery (needed for Bootstrap JavaScript-Plugins) -->
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+        <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
+    </body>
+</html>

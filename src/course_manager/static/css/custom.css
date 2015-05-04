@@ -1,0 +1,418 @@
+/*****************
+GENERAL
+*****************/
+
+body {
+	margin: 0 auto;
+	background-color: #fff;
+    font-family: 'Oxygen', sans-serif;
+    color: #424242;
+}
+
+a {
+  color: #424242;
+  text-decoration: none;
+}
+
+a:hover {
+	color: #6eb80f;
+	text-decoration: none;
+}
+
+/*****************
+STRUCTURE
+*****************/
+
+#mainHeader {
+    display: flex;
+    padding: 0 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+
+
+#mainHeader > .headline {
+    font-size: 2.5em;
+    flex-grow: 1;
+    align-self: center;
+}
+
+@media (max-width: 530px) {
+    #mainHeader > .headline {
+        font-size: 1.5em;
+        text-align: center;
+    }
+}
+
+#mainHeader > .headline:hover, #mainHeader > .headline:focus {
+    color: inherit;
+    text-decoration: none;
+}
+
+.subHeader {
+    padding: 5px 15px;
+    background: linear-gradient(#79BE0E, #B1E11C);
+}
+
+section .subHeader {
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: wrap;
+    padding: 0 10px;
+}
+
+.subHeader > a {
+    padding: 5px;
+    margin-left: 5px;
+}
+
+.subHeader > a:hover {
+    color: white;
+    background: linear-gradient(#61a50e, #B1E11C);
+}
+
+.box {
+    padding: 15px;
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+nav .box {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 991px) and (min-width: 500px) {
+    nav .box {
+        justify-content: space-between;
+        flex-direction: row;
+    }
+}
+
+footer {
+    text-align: center;
+}
+
+/*****************
+ROWS
+*****************/
+
+#login {
+	font-size: 8px;
+	margin-left: 40px;
+	height: 100px;
+	padding-left: 20px;
+	padding-top: 50px;
+}
+
+.edit {
+	white-space: nowrap;
+	margin-top: 47px;
+	font-weight: 300;
+  font-size: 1.0em;
+}
+
+#logincontent-head {
+	margin-top: 10px;
+	width: 950px;
+	min-height: 40px;
+	background: -moz-linear-gradient(270deg, rgb(121, 190, 14), rgb(177, 225, 28));
+	background: -webkit-linear-gradient(270deg, rgb(121, 190, 14), rgb(177, 225, 28));
+	background: -o-linear-gradient(270deg, rgb(121, 190, 14), rgb(177, 225, 28));
+}
+
+#logincontent {
+	width: 950px;
+	/*min-height: 250px;*/
+	max-height: 600px;
+	text-align: center;
+	box-shadow: 1px 2px 4px rgba(0,0,0, .2);
+}
+
+
+#message_tutors a {
+	color: blue;
+}
+
+ul {
+    padding-left: 0;
+	list-style-type: none;
+	line-height: 2;
+}
+
+
+#content td {
+padding-top: 7px;
+width: 125px;
+color: #424242;
+  font-family: 'Oxygen', sans-serif;
+  font-weight: 400;
+  font-size: 1.1em;
+}
+
+#content th {
+    padding-top: 7px;
+    width: 125px;
+    color: #424242;
+    font-family: 'Oxygen', sans-serif;
+    padding-left: 30px;
+    font-size: 1.1em;
+}
+
+
+.form-horizontal {
+	max-width: 450px;
+	margin-left: 150px;
+}
+
+
+.form-signin {
+	max-width: 450px;
+	margin-left: 150px;
+}
+
+
+.form-control {
+	margin-top: 15px;
+}
+
+
+.btn-default {
+	margin-top:10px;
+	width: 150px;
+	background-color: #dfdede;
+}
+
+.btn:hover,
+.btn:focus,
+.btn.focus {
+  color: #fff;
+  background-color: #a2a0a0;
+  text-decoration: none;
+}
+
+
+.btn-primary {
+	margin-top: 15px;
+	width: 150px;
+	margin-left: 150px;
+}
+
+
+.control-label {
+	margin-top: 13px;
+}
+
+
+.send {
+	margin-left: 310px;
+	margin-bottom: 25px;
+}
+
+
+#InputMessage { 
+	margin-left: 200px;
+	width: 400px;
+}
+
+.form-control:focus {
+  border-color: #6eb80f;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(110, 184, 15, .4);
+          box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(110, 184, 15, .4);
+/*  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+          box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6); */
+}
+	
+/*****************
+FOOTER
+*****************/
+
+.navbar {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.logoutButton {
+	z-index: 1;
+	text-decoration: underline;
+}
+
+.logoutButton a:hover {
+	color: #fff;
+}
+
+.editCourse {
+	position: absolute;
+	margin-left: 135px;
+	margin-top: 9px;
+	color: #424242;
+  font-family: 'Oxygen', sans-serif;
+  font-weight: 300;
+  font-size: 0.60em;
+	z-index: 0;
+	position: absolute;
+	text-decoration: underline;
+}
+
+.editCourse a:hover {
+	color: #fff;
+}
+
+.editTutor {
+	position: absolute;
+	margin-left: 135px;
+	margin-top: 9px;
+	color: #424242;
+  font-family: 'Oxygen', sans-serif;
+  font-weight: 300;
+  font-size: 0.60em;
+	z-index: 0;
+	position: absolute;
+	text-decoration: underline;
+}
+
+.editTutor a:hover {
+	color: #fff;
+}
+
+.checkbox {
+	margin-top: 15px;
+	margin-left: -3px;
+	color: #424242;
+  font-family: 'Oxygen', sans-serif;
+  font-weight: 400;
+  font-size: 1.00em;
+}
+
+label {
+	color: #424242;
+  font-family: 'Oxygen', sans-serif;
+  font-weight: 400;
+  font-size: 1.00em;
+}
+
+input[type="checkbox"]:checked {
+	box-shadow: inset 0 1px 3px rgba(0,0,0,.3);
+}
+
+input[type="checkbox"]:not(:checked),
+input[type="checkbox"]:checked 
+
+
+#edited.nav li a, #edited .nav li a {
+	color: green!important;
+  font-family: 'Oxygen', sans-serif;
+  font-weight: 400;
+  font-size: 1.15em;
+  text-decoration: none;
+}
+
+#editMode {
+	color: red;
+}
+
+
+/* marked rows of participant lists */
+.container.row.col-sm-10.table.cat, .container .row .col-sm-10 .table .cat {
+	background-color: #ebeaea;
+}
+
+
+/* Back-button in content header */
+.backButton {
+	float: left;
+	margin-left: 15px;
+	margin-top: 7px;
+	font-size: 17px;
+}
+.backButton a:hover {
+	color: #fff;
+}
+
+/*Login box on login site */
+.container.row.col-sm-2.small-content.nav p, .container .row .col-sm-2 .small-content .nav p {
+	margin-left: 15px;
+	margin-right: 15px;
+	margin-top: 15px;
+	margin-bottom: 22px;
+}
+
+/* font-size for table/list of all tutors (to save some space) */
+.container.row.col-sm-10.table a, .container .row .col-sm-10 .table a {
+	font-size: 1.0em;
+}
+
+.checkAppointement {
+	float: left;
+	margin-top: 23px;
+	margin-left: 15px;
+}
+
+.deleteLabel {
+	position: absolute;
+	margin-top: 303px;
+	margin-left: 585px;
+}
+
+.deleteIcon {
+	position: absolute;
+	float: right;
+	margin-top: 316px;
+	margin-left: 730px;
+}
+
+.buttonsApp {
+	margin-top: 370px;
+	margin-bottom: 20px;
+}
+
+.approvalLabel {
+	position: absolute;
+	margin-top: 305px;
+	margin-left: 35px;
+}
+
+.column-one {
+	width: 30%;
+}
+
+.column-two {
+ width: 20%;
+ margin-top: 10px;
+}
+.column-three {
+	width: 30%;
+}
+.column-four {
+	width: 10%;
+}
+
+.column-five {
+ width: 10%;
+}
+
+.row.col-sm-10.tutorTable tr, .row .col-sm-10 .tutorTable tr {
+	border-collapse: collapse;
+	padding: 5px;
+	height: 10px;
+}
+
+.course-column-one {
+	width: 50%;
+}
+.course-column-two {
+	width: 30%;
+}
+.course-column-three {
+	width: 10%;
+}
+.course-column-four {
+	width: 10%;
+}
+
+
+
+
+

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>IFSR Course Management | Enrollment</title>
+		<meta name="description" content="Course Enrollment of the IFSR TU Dresden. Software Technology Group, TU Dresden, 2014/2015">
+		<meta name="author" content="SWT10/14">
+		<!-- Normalize CSS v1.1.0 | MIT License | http://www.git.io/normalize -->
+		<link href="{{ STATIC_URL }}css/normalize.css" rel="stylesheet">
+		<!-- Google Fonts http://www.google.com/fonts -->
+		<link href='http://fonts.googleapis.com/css?family=Oxygen:400,300|Oswald|Roboto+Condensed:300italic,400,300' rel='stylesheet' type='text/css'>
+		<!-- Bootstrap CSS http://getbootstrap.com -->
+		<link href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<!-- Custom CSS -->
+		<link href="{{ STATIC_URL }}css/custom.css" rel="stylesheet">
+		<!-- java script -->
+		<!-- notification window after enrollment -->
+		<noscript><p><br>Your browser currently does not support JavaScript! Please activate JavaScript to use this site properly.</p></noscript>
+    </head>
+    <body>
+        <div class="container">
+            <header id="mainHeader">
+                <a class="headline" href="{% url 'cmanagement:exec' %}">IFSR course enrollment</a>
+                <a href ="https://www.ifsr.de/start"><img src="{{ STATIC_URL }}img/fsrlogo.png"></a>
+            </header>
+
+            <nav class="col-xs-12 col-md-2">
+                <header class="subHeader">Your Courses</header>
+                <div class="box">
+                    {% if my_courses_list %}
+                        {% for course in my_courses_list %}
+                            <a href="{% url 'cmanagement:showCourseAppointmentsTut' course.id %}">{{ course.name }}</a>
+                        {% endfor %}
+                    {%else%}
+                        no courses available
+                    {%endif%}
+                </div>
+
+                <header class="subHeader">Other Tutors</header>
+                <div class="box">
+                    {% if tutors_list %}
+                        {% for tutor in tutors_list %}
+                            <span>
+                                {{ tutor.name_of_user }} <a href="{% url 'cmanagement:newEmailFormTut' tutor.id %}"><span class="glyphicon glyphicon-envelope" title="message tutor"></span></a>
+                            </span>
+                        {% endfor %}
+                    {%else%}
+                        no Tutors available
+                    {%endif%}
+                </div>
+            </nav>
+
+            <section class="col-xs-12 col-md-10">
+                <header class="subHeader">
+                    <a href="/kurse/faq/">Questions?</a>
+                    <a href="{% url 'cmanagement:teamcredits' %}">Team</a>
+                    <a href="{% url 'cmanagement:resetPW' %}">Reset Password</a>
+                    <a href="{% url 'cmanagement:Logout' %}">Logout</a>
+                </header>
+                <div class="box">
+                    <p>
+                        <a href="{% url 'cmanagement:tut' %}">
+                            <span class="glyphicon glyphicon-chevron-left"></span>back to main page
+                        </a>
+                    </p>
+                    {% if message %}
+                        <h1>{{message}} </h1>
+
+                    {%else%}
+                        <p> What exactly is the matrix? </p>
+                    {%endif%}
+                </div>
+            </section>
+
+            <footer class="navbar navbar-fixed-bottom" role="navigation">
+                <a href="https://twitter.com/@ifsr"><img src="{{ STATIC_URL }}img/twitter-wrap.png" width="30px" height="30px" alt="Twitter Logo"></a>
+                <a href="https://www.facebook.com/iFSR.de"><img src="{{ STATIC_URL }}img/facebook-wrap.png" width="30px" height="30px" alt="Facebook Logo"></a>
+            </footer>
+        </div>
+
+        <!-- jQuery (needed for Bootstrap JavaScript-Plugins) -->
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+        <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
+    </body>
+</html>
