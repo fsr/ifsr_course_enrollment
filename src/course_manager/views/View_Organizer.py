@@ -1156,17 +1156,14 @@ def show_course_credits(request, course_id):
     latest_courses_list = Course.objects.order_by('-name')[:5]
 
     appointment_list = get_appointment_list()
-    # this is unused???
-    # course_apps = [
-    #     appl for appl in appointment_list
-    #     if appl.my_course.id == course.id
-    # ]
+
     part_list = [
-        (participant
-        for participant in appl.my_participants.all()
-        if not participant.credit == 'none')
+        participant
         for appl in appointment_list
+        for participant in appl.my_participants.all()
+        if not participant.credit == 'none'
     ]
+
 
 
     context = {'course': course,
