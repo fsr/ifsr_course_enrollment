@@ -22,34 +22,19 @@
     <body>
         <div class="container">
             <header id="mainHeader">
-                <a class="headline" href="{% url 'cmanagement:exec' %}">IFSR course enrollment</a>
+                <a class="headline" href="{% url 'cmanagement:index' %}">IFSR course enrollment</a>
                 <a href ="https://www.ifsr.de/start"><img src="{{ STATIC_URL }}img/fsrlogo.png"></a>
             </header>
 
             <nav class="col-xs-12 col-md-2">
-                <header class="subHeader">Courses<a href="{% url 'cmanagement:addCourseForm' %}">add</a></header>
+                <header class="subHeader">Courses</header>
                 <div class="box">
                     {% if latest_courses_list %}
                         {% for course in latest_courses_list %}
-                            <a href="{% url 'cmanagement:showCourseAppointments' course.id %}">{{ course.name }}</a>
+                            <a href="{% url 'cmanagement:showAppointments' course.id %}">{{ course.name }}</a>
                         {% endfor %}
-                        <a href="{% url 'cmanagement:orgaShowAllCourses' %}" title="show all courses">show all <span class="glyphicon glyphicon-chevron-right"></span></a>
                     {%else%}
                         no courses available
-                    {%endif%}
-                </div>
-
-                <header class="subHeader">Tutors<a href="{% url 'cmanagement:addTutorForm' %}">add</a></header>
-                <div class="box">
-                    {% if tutors_list %}
-                        {% for tutor in tutors_list %}
-                            <span>
-                                <a href="{% url 'cmanagement:editTutorForm' tutor.id%}">{{ tutor.name_of_user }}</a> <a href="{% url 'cmanagement:newEmailFormOrga' tutor.id %}"><span class="glyphicon glyphicon-envelope" title="message tutor"></span></a>
-                            </span>
-                        {% endfor %}
-                        <a href="{% url 'cmanagement:orgaShowAllTutors' %}" title="show all tutors">show all <span class="glyphicon glyphicon-chevron-right"></span></a>
-                    {%else%}
-                        no Tutors available
                     {%endif%}
                 </div>
             </nav>
@@ -58,16 +43,24 @@
                 <header class="subHeader">
                     <a href="{% url 'cmanagement:faq' %}">Questions?</a>
                     <a href="{% url 'cmanagement:teamcredits' %}">Team</a>
-                    <a href="{% url 'cmanagement:resetPW' %}">Reset Password</a>
-                    <a href="{% url 'cmanagement:Logout' %}">Logout</a>
-                    <a href="{% url 'cmanagement:exec' %}" ><span class="glyphicon glyphicon-chevron-left" title="back"></span></a>
                 </header>
                 <div class="box">
-                    {% if message %}
-                        <h1>{{message}} </h1>
-                    {%else%}
-                        <p> What exactly is the matrix? </p>
-                    {%endif%}
+					<h1>FAQ</h1>
+                    <br>
+					<strong>Why is everything in english?</strong>
+                    <p>
+                        We started with english since it does not exclude foreign students from joining the courses.<br>
+                        When we find the time, a german version of the site will be offered as well.
+                    </p>
+
+					<strong>Can I accredit my chosen course as <i>studium generale</i> or <i>AQuA</i>?</strong>
+					<p>
+                        It depends:<br>
+                        If you are member of the faculty of computer science, you can only get AQuA by beeing a tutor.<br>
+                        Otherwise, studium generale is available for everyone, while AQuA is only recognized by certain faculties. If you are not sure, feel free to ask.
+                    </p>
+					<strong>Who can I ask, if I have specific questions?</strong>
+                    <p>fredo [at] ifsr . de</p>
                 </div>
             </section>
 
