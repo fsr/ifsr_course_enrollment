@@ -14,9 +14,14 @@ from django.contrib.auth import authenticate
 from django.utils import timezone
 
 
+NO_CREDIT = 'c0'
+NO_FACULTY = 'f0'
+
+
 AVAILABLE_CREDITS = {
     'c1': 'AQUA',
-    'c3': 'extracurricular studies (studium generale)'
+    'c3': 'extracurricular studies (studium generale)',
+    NO_CREDIT: 'None' # If the database accepts NULL in this column it could also be None here
 }
 
 FACULTIES = {
@@ -34,6 +39,7 @@ FACULTIES = {
     'f12': 'Faculty of Environmental Sciences',
     'f13': 'Faculty of Transportation and Traffic Science',
     'f14': 'Faculty of Medicine Carl Gustav Carus',
+    NO_FACULTY: 'None' # If the database accepts NULL in this column it could also be None here
 }
 
 S_NUMBER_REGEX = re.compile("""^s(\d){7}$""")
@@ -192,12 +198,20 @@ def process_enrollment(request, appointment_id):
         if identifier not in request.POST:
             return HttpResponseRedirect(reverse('cmanagement:show_enroll', args=[appointment_id]))
 
+
+
+    credit = request.POST['credit_dropdown']
+    faculty = request.POST['faculty_dropdown']
+
+    if credit != NO_CREDIT and 'faculty_dropdown' == NO_FACULTY:
+        return HttpResponseRedirect(reverse('cmanagement:show_enroll', args=[appointment_id]))
+
+
     s_number = request.POST['snumber']
     name = request.POST['nameInput']
     name_of_user = name
     name = name.replace(" ", "")
-    credit = request.POST['credit_dropdown']
-    faculty = request.POST['faculty_dropdown']
+
 
     # assert we have valid credit and/or faculty
     if (
@@ -222,6 +236,7 @@ def process_enrollment(request, appointment_id):
     # first, check the database for a matching participant
     new_account = None
 
+    # this is disgusting .... no query optimization AT ALL 
     for account in Participant.objects.all():
         if account.username == username:
             new_account = account
