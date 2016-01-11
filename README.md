@@ -1,5 +1,7 @@
 # The IFSR course enrollment system
 
+**Deprecated in favor of [fsr/course-management](https://github.com/fsr/course-management)**
+
 ## What it does
 This is an enrollment system for courses that are offered by the students of the Faculty of Computer Science at TU Dresden, Germany (*TUD/Inf* for short). It allows to plan and announce courses, manage their appointments and participants, as well as crediting.
 For users, the system odffers a uncomplicated way of getting an overview over the courses offered and aquire detailed  information on these. If a user is interested in a certain course (s)he may enroll in a straight-forward procedure.
